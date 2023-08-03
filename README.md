@@ -24,5 +24,5 @@ next.js and materail-ui
 
 ```bash
 yarn create next-app --typescript project_name
-yarn add @mui/material @emotion/react @emotion/styled @emotion/server
+yarn add @mui/material @mui/icons-material @emotion/react @emotion/styled @emotion/server
 ```
