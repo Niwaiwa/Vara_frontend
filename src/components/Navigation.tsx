@@ -16,6 +16,10 @@ import StarIcon from '@mui/icons-material/Star';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import PlayCircleFilledIcon from '@mui/icons-material/PlayCircleFilled';
 import { styled, useTheme, Theme, CSSObject } from '@mui/material/styles';
+import { useSelector, useDispatch } from 'react-redux';
+import { switchOpen } from '../globalRedux/features/sidebar/sidebarSlice';
+import { RootState } from '../globalRedux/store';
+
 
 const drawerWidth = 240;
 
@@ -85,11 +89,13 @@ const Navigation = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const isMenuOpen = Boolean(anchorEl);
   const [isLogin, setIsLogin] = useState(false);
-  const [open, setOpen] = useState(false);
   const theme = useTheme();
   const [locale, setLocale] = useState('en-US');
   const [rating, setRating] = useState('all');
   const [themeMode, setThemeMode] = useState('light');
+
+  const open = useSelector((state: RootState) => state.sidebar.open);
+  const dispatch = useDispatch();
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -97,10 +103,6 @@ const Navigation = () => {
 
   const handleMenuClose = () => {
     setAnchorEl(null);
-  };
-
-  const handleDrawerSwitch = () => {
-    setOpen(!open);
   };
 
   const getLocaleMappping = (text: string) => {
@@ -153,7 +155,7 @@ const Navigation = () => {
     <>
       <AppBar position="fixed" open={open}>
         <Toolbar>
-          <IconButton edge="start" color="inherit" aria-label="menu" onClick={handleDrawerSwitch}>
+          <IconButton edge="start" color="inherit" aria-label="menu" onClick={() => dispatch(switchOpen())}>
             <MenuIcon />
           </IconButton>
           {/* <PlayCircleFilledIcon sx={{ mr: 1 }} /> */}

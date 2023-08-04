@@ -8,6 +8,7 @@ import theme from '../themes/theme';
 import createEmotionCache from '../createEmotionCache';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
+import ReduxProvider from "../globalRedux/provider";
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
@@ -19,6 +20,7 @@ export interface MyAppProps extends AppProps {
 export default function MyApp(props: MyAppProps) {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
   return (
+    <ReduxProvider>
     <CacheProvider value={emotionCache}>
       <Head>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
@@ -31,5 +33,6 @@ export default function MyApp(props: MyAppProps) {
         <Footer />
       </ThemeProvider>
     </CacheProvider>
+    </ReduxProvider>
   );
 }
