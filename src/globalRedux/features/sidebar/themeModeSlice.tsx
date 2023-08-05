@@ -2,8 +2,13 @@
 
 import { createSlice } from "@reduxjs/toolkit";
 
+const enum ThemeMode {
+    Light = 'light',
+    Dark = 'dark',
+}
+
 const initialState = {
-  themeMode: 'light',
+  themeMode: ThemeMode.Light,
 };
 
 export const themeModeSlice = createSlice({
@@ -14,13 +19,17 @@ export const themeModeSlice = createSlice({
         state.themeMode = action.payload;
     },
     setThemeModeToLight: (state) => {
-        state.themeMode = 'light';
+        state.themeMode = ThemeMode.Light;
     },
     setThemeModeToDark: (state) => {
-        state.themeMode = 'dark';
+        state.themeMode = ThemeMode.Dark;
     },
   },
 });
+
+export const getAllThemeModes = () => {
+    return [ThemeMode.Light, ThemeMode.Dark];
+}
 
 export const { setThemeMode, setThemeModeToLight, setThemeModeToDark } = themeModeSlice.actions
 

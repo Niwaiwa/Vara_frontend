@@ -18,6 +18,9 @@ import PlayCircleFilledIcon from '@mui/icons-material/PlayCircleFilled';
 import { styled, useTheme, Theme, CSSObject } from '@mui/material/styles';
 import { useSelector, useDispatch } from 'react-redux';
 import { switchOpen } from '../globalRedux/features/sidebar/sidebarSlice';
+import { getAllLocales, setLocale } from '../globalRedux/features/sidebar/localeSlice';
+import { getAllRatings, setRating } from '../globalRedux/features/sidebar/ratingSlice';
+import { getAllThemeModes, setThemeMode } from '../globalRedux/features/sidebar/themeModeSlice';
 import { RootState } from '../globalRedux/store';
 
 
@@ -84,17 +87,19 @@ const AppBar = styled(MuiAppBar, {
 }));
 
 
-
 const Navigation = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const isMenuOpen = Boolean(anchorEl);
   const [isLogin, setIsLogin] = useState(false);
   const theme = useTheme();
-  const [locale, setLocale] = useState('en-US');
-  const [rating, setRating] = useState('all');
-  const [themeMode, setThemeMode] = useState('light');
 
   const open = useSelector((state: RootState) => state.sidebar.open);
+  const locale = useSelector((state: RootState) => state.locale.locale);
+  const rating = useSelector((state: RootState) => state.rating.rating);
+  const themeMode = useSelector((state: RootState) => state.themeMode.themeMode);
+  const allLocales = getAllLocales();
+  const allRatings = getAllRatings();
+  const allThemeModes = getAllThemeModes();
   const dispatch = useDispatch();
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -105,33 +110,33 @@ const Navigation = () => {
     setAnchorEl(null);
   };
 
-  const getLocaleMappping = (text: string) => {
-    if (text === 'English') {
-      return 'en-US';
-    } else if (text === 'Japanese') {
-      return 'ja-JP';
+  const getLocaleText = (text: string) => {
+    if (text === 'en-US') {
+      return 'English';
+    } else if (text === 'ja-JP') {
+      return 'Japanese';
     } else {
       return text;
     }
   };
 
-  const getRatingMappping = (text: string) => {
-    if (text === 'All') {
-      return 'all';
-    } else if (text === 'General') {
-      return 'G';
-    } else if (text === 'Ecchi') {
-      return 'E';
+  const getRatingText = (text: string) => {
+    if (text === 'all') {
+      return 'All';
+    } else if (text === 'G') {
+      return 'General';
+    } else if (text === 'E') {
+      return 'Ecchi';
     } else {
       return text;
     }
   };
 
-  const getThemeModeMappping = (text: string) => {
-    if (text === 'Dark') {
-      return 'dark';
-    } else if (text === 'Light') {
-      return 'light';
+  const getThemeModeText = (text: string) => {
+    if (text === 'dark') {
+      return 'Dark';
+    } else if (text === 'light') {
+      return 'Light';
     } else {
       return text;
     }
@@ -279,7 +284,7 @@ const Navigation = () => {
               </ListItem>
             </Box>
             {open ?
-              ['English', 'Japanese'].map((text, index) => (
+              allLocales.map((text, index) => (
                 <ListItem
                   key={text}
                   disablePadding sx={{ display: 'block' }}
@@ -290,7 +295,7 @@ const Navigation = () => {
                       justifyContent: open ? 'initial' : 'center',
                       px: 2.5,
                     }}
-                    onClick={() => setLocale(getLocaleMappping(text))}
+                    onClick={() => dispatch(setLocale(text))}
                   >
                     <ListItemIcon
                       sx={{
@@ -299,9 +304,9 @@ const Navigation = () => {
                         justifyContent: 'center',
                       }}
                     >
-                      {getLocaleMappping(text) === locale ? <CheckboxIcon /> : <UnCheckboxIcon />}
+                      {text === locale ? <CheckboxIcon /> : <UnCheckboxIcon />}
                     </ListItemIcon>
-                    <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
+                    <ListItemText primary={getLocaleText(text)} sx={{ opacity: open ? 1 : 0 }} />
                   </ListItemButton>
                 </ListItem>
               ))
@@ -330,7 +335,7 @@ const Navigation = () => {
               </ListItem>
             </Box>
             {open ?
-              ['all', 'G', 'E'].map((text, index) => (
+              allRatings.map((text, index) => (
                 <ListItem
                   key={text}
                   disablePadding sx={{ display: 'block' }}
@@ -341,7 +346,7 @@ const Navigation = () => {
                       justifyContent: open ? 'initial' : 'center',
                       px: 2.5,
                     }}
-                    onClick={() => setRating(getRatingMappping(text))}
+                    onClick={() => dispatch(setRating(text))}
                   >
                     <ListItemIcon
                       sx={{
@@ -350,9 +355,9 @@ const Navigation = () => {
                         justifyContent: 'center',
                       }}
                     >
-                      {getRatingMappping(text) === rating ? <CheckboxIcon /> : <UnCheckboxIcon />}
+                      {text === rating ? <CheckboxIcon /> : <UnCheckboxIcon />}
                     </ListItemIcon>
-                    <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
+                    <ListItemText primary={getRatingText(text)} sx={{ opacity: open ? 1 : 0 }} />
                   </ListItemButton>
                 </ListItem>
               ))
@@ -381,7 +386,7 @@ const Navigation = () => {
               </ListItem>
             </Box>
             {open ?
-              ['Dark', 'Light'].map((text, index) => (
+              allThemeModes.map((text, index) => (
                 <ListItem
                   key={text}
                   disablePadding sx={{ display: 'block' }}
@@ -392,7 +397,7 @@ const Navigation = () => {
                       justifyContent: open ? 'initial' : 'center',
                       px: 2.5,
                     }}
-                    onClick={() => setThemeMode(getThemeModeMappping(text))}
+                    onClick={() => dispatch(setThemeMode(text))}
                   >
                     <ListItemIcon
                       sx={{
@@ -401,9 +406,9 @@ const Navigation = () => {
                         justifyContent: 'center',
                       }}
                     >
-                      {getThemeModeMappping(text) === themeMode ? <CheckboxIcon /> : <UnCheckboxIcon />}
+                      {text === themeMode ? <CheckboxIcon /> : <UnCheckboxIcon />}
                     </ListItemIcon>
-                    <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
+                    <ListItemText primary={getThemeModeText(text)} sx={{ opacity: open ? 1 : 0 }} />
                   </ListItemButton>
                 </ListItem>
               ))

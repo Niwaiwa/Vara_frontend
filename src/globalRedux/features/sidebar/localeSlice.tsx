@@ -2,8 +2,14 @@
 
 import { createSlice } from "@reduxjs/toolkit";
 
+
+const enum Locale {
+  EN = 'en-US',
+  JP = 'ja-JP',
+}
+
 const initialState = {
-  locale: 'en-US',
+  locale: Locale.EN,
 };
 
 export const localeSlice = createSlice({
@@ -14,13 +20,17 @@ export const localeSlice = createSlice({
         state.locale = action.payload;
     },
     setLocaleToEn: (state) => {
-        state.locale = 'en-US';
+        state.locale = Locale.EN;
     },
     setLocaleToJp: (state) => {
-        state.locale = 'ja-JP';
+        state.locale = Locale.JP;
     },    
   },
 });
+
+export const getAllLocales = () => {
+  return [Locale.EN, Locale.JP];
+}
 
 export const { setLocale, setLocaleToEn, setLocaleToJp } = localeSlice.actions
 
