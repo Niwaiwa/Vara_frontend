@@ -90,7 +90,7 @@ const AppBar = styled(MuiAppBar, {
 const Navigation = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const isMenuOpen = Boolean(anchorEl);
-  const [isLogin, setIsLogin] = useState(false);
+  const [isLoggedIn, setisLoggedIn] = useState(false);
   const theme = useTheme();
 
   const open = useSelector((state: RootState) => state.sidebar.open);
@@ -150,8 +150,12 @@ const Navigation = () => {
       onClose={handleMenuClose}
     >
       {/* Add user menu items here */}
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>Settings</MenuItem>
+      <Link href="/profile" passHref>
+        <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+      </Link>
+      <Link href="/settings" passHref>
+        <MenuItem onClick={handleMenuClose}>Settings</MenuItem>
+      </Link>
       <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
     </Menu>
   );
@@ -167,9 +171,16 @@ const Navigation = () => {
           <Typography variant="h6" style={{ flexGrow: 1 }}>
             Your Video Site
           </Typography>
-          <Button color="inherit">Register</Button>
-          <Button color="inherit">Login</Button>
-          { isLogin ? <Avatar onClick={handleMenuOpen} /> : null}        
+          { isLoggedIn ? <Avatar onClick={handleMenuOpen} /> 
+          : <>
+            <Link href="/register" passHref>
+              <Button color="inherit">Register</Button>
+            </Link>
+            <Link href="/login" passHref>
+              <Button color="inherit">Login</Button>
+            </Link>
+            </>
+          }
         </Toolbar>
         {renderMenu}
       </AppBar>

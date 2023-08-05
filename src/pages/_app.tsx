@@ -9,6 +9,8 @@ import createEmotionCache from '../createEmotionCache';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
 import ReduxProvider from "../globalRedux/provider";
+import Section from "../components/Section";
+
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
@@ -29,7 +31,9 @@ export default function MyApp(props: MyAppProps) {
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
         <Navigation />
-        <Component {...pageProps} />
+        <Section>
+          <Component {...pageProps} />  
+        </Section>
         <Footer />
       </ThemeProvider>
     </CacheProvider>
