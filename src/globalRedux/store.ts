@@ -3,10 +3,18 @@
 "use client";
 import { combineReducers, configureStore  } from "@reduxjs/toolkit";
 import sidebarReducer from "./features/sidebar/sidebarSlice";
+import localeReducer from "./features/sidebar/localeSlice";
+import ratingReducer from "./features/sidebar/ratingSlice";
+import themeModeReducer from "./features/sidebar/themeModeSlice";
+import authReducer from "./features/auth/authSlice";
 
 
 const rootReducer = combineReducers({
   sidebar: sidebarReducer,
+  locale: localeReducer,
+  rating: ratingReducer,
+  themeMode: themeModeReducer,
+  auth: authReducer,
   //add all your reducers here
 },);
 
