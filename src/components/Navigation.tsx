@@ -22,6 +22,9 @@ import { getAllLocales, setLocale } from '../globalRedux/features/sidebar/locale
 import { getAllRatings, setRating } from '../globalRedux/features/sidebar/ratingSlice';
 import { getAllThemeModes, setThemeMode } from '../globalRedux/features/sidebar/themeModeSlice';
 import { RootState } from '../globalRedux/store';
+import { logout } from '../globalRedux/features/auth/authSlice';
+import axios from 'axios';
+import Snackbar, { SnackbarOrigin } from '@mui/material/Snackbar';
 
 
 const drawerWidth = 240;
@@ -86,21 +89,34 @@ const AppBar = styled(MuiAppBar, {
   }),
 }));
 
+interface CustomState extends SnackbarOrigin {
+  open: boolean;
+  message?: string;
+}
 
 const Navigation = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const isMenuOpen = Boolean(anchorEl);
-  const [isLoggedIn, setisLoggedIn] = useState(false);
   const theme = useTheme();
 
+  const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
   const open = useSelector((state: RootState) => state.sidebar.open);
   const locale = useSelector((state: RootState) => state.locale.locale);
   const rating = useSelector((state: RootState) => state.rating.rating);
   const themeMode = useSelector((state: RootState) => state.themeMode.themeMode);
+  const token = useSelector((state: RootState) => state.auth.token);
   const allLocales = getAllLocales();
   const allRatings = getAllRatings();
   const allThemeModes = getAllThemeModes();
   const dispatch = useDispatch();
+
+  const [snackBarState, setSnackBarState] = useState<CustomState>({
+    open: false,
+    vertical: 'top',
+    horizontal: 'center',
+  });
+
+  const { vertical, horizontal, open: snackBarOpen, message } = snackBarState;
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -108,6 +124,25 @@ const Navigation = () => {
 
   const handleMenuClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleLogoutAndClose = () => {
+    try {
+
+      const header = {
+        'Authorization': `Bearer ${token}`,
+      }
+      const response = axios.post('http://localhost:8000/api/users/logout', {}, { headers: header });
+      handleMenuClose();
+      dispatch(logout());
+      // console.log('ログアウト成功:', response.data);
+      // 他の処理を追加
+      setSnackBarState({ ...snackBarState, open: true, message: 'Logout success' });
+    } catch (error) {
+      // console.error('Logout failed:', error);
+      // 他の処理を追加
+      setSnackBarState({ ...snackBarState, open: true, message: 'Logout failed' });
+    }
   };
 
   const getLocaleText = (text: string) => {
@@ -156,7 +191,7 @@ const Navigation = () => {
       <Link href="/settings" passHref>
         <MenuItem onClick={handleMenuClose}>Settings</MenuItem>
       </Link>
-      <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
+      <MenuItem onClick={handleLogoutAndClose}>Logout</MenuItem>
     </Menu>
   );
 
@@ -427,6 +462,14 @@ const Navigation = () => {
           </List>
         </Box>
       </Drawer>
+      <Snackbar
+        anchorOrigin={{ vertical: vertical, horizontal: horizontal }}
+        autoHideDuration={3000}
+        open={snackBarOpen}
+        onClose={() => setSnackBarState({ ...snackBarState, open: false })}
+        message={message}
+        key={vertical + horizontal}
+      />
     </>
   );
 };
