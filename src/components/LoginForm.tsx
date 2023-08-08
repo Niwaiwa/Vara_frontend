@@ -34,7 +34,6 @@ const LoginForm: React.FC = () => {
 
   const handleLogin = async () => {
     try {
-      // ログインリクエストのデータを作成
       const loginData = {
         // email,
         username,
@@ -45,49 +44,36 @@ const LoginForm: React.FC = () => {
         'Content-Type': 'multipart/form-data',
       }
 
-      // バックエンドのログインAPIを呼び出し
       const response = await axios.post('http://localhost:8000/api/users/login', loginData, { headers: loginHeader });
       console.log('response status:', response.status);
       const token = response.data.access_token;
       const userInfo = await getUserInfo(token);
 
-      // ログインが成功した場合の処理
       const payload = {
         isLoggedIn: true,
         token: token,
         userInfo: userInfo,
       }
       dispatch(login(payload));
-      // console.log('ログイン成功:', response.data);
-      // 他の処理を追加
       setSnackBarState({ ...snackBarState, open: true, message: 'Login success' });
       router.push('/');
     } catch (error) {
-      // ログインが失敗した場合の処理
       // console.error('Login failed:', error);
-      // 他の処理を追加
       setSnackBarState({ ...snackBarState, open: true, message: 'Login failed' });
     }
   };
 
   const getUserInfo = async ( token = null ) => {
     try {
-      // バックエンドのユーザー情報取得APIを呼び出し
       const header = {
         'Authorization': `Bearer ${token}`,
       }
 
       const response = await axios.get('http://localhost:8000/api/users/', { headers: header });
-      // const response = await axios.get('/api/users/me');
-
-      // ユーザー情報の取得が成功した場合の処理
-      console.log('ユーザー情報取得成功:', response.data);
-      // 他の処理を追加
       return response.data;
     } catch (error) {
-      // ユーザー情報の取得が失敗した場合の処理
-      console.error('ユーザー情報取得失敗:', error);
-      // 他の処理を追加
+      // console.error('Get user info failed:', error);
+      setSnackBarState({ ...snackBarState, open: true, message: 'Get user info failed' });
     }
   };
 
