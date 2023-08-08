@@ -132,7 +132,8 @@ const Navigation = () => {
       const header = {
         'Authorization': `Bearer ${token}`,
       }
-      const response = axios.post('http://localhost:8000/api/users/logout', {}, { headers: header });
+      const serverURL = process.env.NEXT_PUBLIC_BACKEND_URL;
+      const response = axios.post(`${serverURL}/api/users/logout`, {}, { headers: header });
       handleMenuClose();
       dispatch(logout());
       // console.log('ログアウト成功:', response.data);

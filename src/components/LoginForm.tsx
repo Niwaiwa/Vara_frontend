@@ -44,7 +44,8 @@ const LoginForm: React.FC = () => {
         'Content-Type': 'multipart/form-data',
       }
 
-      const response = await axios.post('http://localhost:8000/api/users/login', loginData, { headers: loginHeader });
+      const serverURL = process.env.NEXT_PUBLIC_BACKEND_URL;
+      const response = await axios.post(`${serverURL}/api/users/login`, loginData, { headers: loginHeader });
       console.log('response status:', response.status);
       const token = response.data.access_token;
       const userInfo = await getUserInfo(token);
@@ -69,7 +70,8 @@ const LoginForm: React.FC = () => {
         'Authorization': `Bearer ${token}`,
       }
 
-      const response = await axios.get('http://localhost:8000/api/users/', { headers: header });
+      const serverURL = process.env.NEXT_PUBLIC_BACKEND_URL;
+      const response = await axios.get(`${serverURL}/api/users`, { headers: header });
       return response.data;
     } catch (error) {
       // console.error('Get user info failed:', error);
