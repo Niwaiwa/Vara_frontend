@@ -46,7 +46,7 @@ const LoginForm: React.FC = () => {
 
       const serverURL = process.env.NEXT_PUBLIC_BACKEND_URL;
       const response = await axios.post(`${serverURL}/api/users/login`, loginData, { headers: loginHeader });
-      console.log('response status:', response.status);
+
       const token = response.data.access_token;
       const userInfo = await getUserInfo(token);
 

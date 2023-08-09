@@ -105,10 +105,14 @@ const Navigation = () => {
   const rating = useSelector((state: RootState) => state.rating.rating);
   const themeMode = useSelector((state: RootState) => state.themeMode.themeMode);
   const token = useSelector((state: RootState) => state.auth.token);
+  const userInfo = useSelector((state: RootState) => state.auth.userInfo);
   const allLocales = getAllLocales();
   const allRatings = getAllRatings();
   const allThemeModes = getAllThemeModes();
   const dispatch = useDispatch();
+
+  const serverURL = process.env.NEXT_PUBLIC_BACKEND_URL;
+  const avatarUrl = userInfo?.avatar ? `${serverURL}${userInfo?.avatar}` : '';
 
   const [snackBarState, setSnackBarState] = useState<CustomState>({
     open: false,
@@ -207,7 +211,11 @@ const Navigation = () => {
           <Typography variant="h6" style={{ flexGrow: 1 }}>
             Your Video Site
           </Typography>
-          { isLoggedIn ? <Avatar onClick={handleMenuOpen} /> 
+          { isLoggedIn ? 
+            <Avatar
+              src={avatarUrl}
+              onClick={handleMenuOpen}
+            /> 
           : <>
             <Link href="/register" passHref>
               <Button color="inherit">Register</Button>
