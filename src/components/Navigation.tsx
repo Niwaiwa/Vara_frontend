@@ -190,11 +190,11 @@ const Navigation = () => {
       onClose={handleMenuClose}
     >
       {/* Add user menu items here */}
-      <Link href="/profile" passHref>
+      <Link href="/profile" passHref style={{ textDecoration: 'none', color: 'inherit' }}>
         <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
       </Link>
-      <Link href="/settings" passHref>
-        <MenuItem onClick={handleMenuClose}>Settings</MenuItem>
+      <Link href="/Account" passHref style={{ textDecoration: 'none', color: 'inherit' }}>
+        <MenuItem onClick={handleMenuClose}>Account</MenuItem>
       </Link>
       <MenuItem onClick={handleLogoutAndClose}>Logout</MenuItem>
     </Menu>
@@ -217,10 +217,10 @@ const Navigation = () => {
               onClick={handleMenuOpen}
             /> 
           : <>
-            <Link href="/register" passHref>
+            <Link href="/register" passHref style={{ textDecoration: 'none', color: 'inherit' }}>
               <Button color="inherit">Register</Button>
             </Link>
-            <Link href="/login" passHref>
+            <Link href="/login" passHref style={{ textDecoration: 'none', color: 'inherit' }}>
               <Button color="inherit">Login</Button>
             </Link>
             </>
@@ -233,24 +233,26 @@ const Navigation = () => {
         <Box>
           <List>
             <ListItem disablePadding sx={{ display: 'block' }}>
-                <ListItemButton
-                  sx={{
-                    minHeight: 48,
-                    justifyContent: open ? 'initial' : 'center',
-                    px: 2.5,
-                  }}
-                >
-                  <ListItemIcon
+                <Link href="/" passHref style={{ textDecoration: 'none', color: 'inherit' }}>
+                  <ListItemButton
                     sx={{
-                      minWidth: 0,
-                      mr: open ? 3 : 'auto',
-                      justifyContent: 'center',
+                      minHeight: 48,
+                      justifyContent: open ? 'initial' : 'center',
+                      px: 2.5,
                     }}
                   >
-                    <HomeIcon />
-                  </ListItemIcon>
-                  <ListItemText primary={'Home'} sx={{ opacity: open ? 1 : 0 }} />
-                </ListItemButton>
+                    <ListItemIcon
+                      sx={{
+                        minWidth: 0,
+                        mr: open ? 3 : 'auto',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      <HomeIcon />
+                    </ListItemIcon>
+                    <ListItemText primary={'Home'} sx={{ opacity: open ? 1 : 0 }} />
+                  </ListItemButton>
+                </Link>
               </ListItem>
           </List>
           <Divider />
