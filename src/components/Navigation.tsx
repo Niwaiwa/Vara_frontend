@@ -105,7 +105,8 @@ const Navigation = () => {
   const rating = useSelector((state: RootState) => state.rating.rating);
   const themeMode = useSelector((state: RootState) => state.themeMode.themeMode);
   const token = useSelector((state: RootState) => state.auth.token);
-  const userInfo = useSelector((state: RootState) => state.auth.userInfo);
+  const user = useSelector((state: RootState) => state.auth.userInfo);
+  const userInfo = user ? user : null;
   const allLocales = getAllLocales();
   const allRatings = getAllRatings();
   const allThemeModes = getAllThemeModes();
@@ -113,6 +114,7 @@ const Navigation = () => {
 
   const serverURL = process.env.NEXT_PUBLIC_BACKEND_URL;
   const avatarUrl = userInfo?.avatar ? `${serverURL}/${userInfo?.avatar}` : '';
+  const username = userInfo?.username ? userInfo?.username : '';
 
   const [snackBarState, setSnackBarState] = useState<CustomState>({
     open: false,
@@ -190,10 +192,10 @@ const Navigation = () => {
       onClose={handleMenuClose}
     >
       {/* Add user menu items here */}
-      <Link href="/profile" passHref style={{ textDecoration: 'none', color: 'inherit' }}>
+      <Link href={`/profile/${encodeURIComponent(username)}`} passHref style={{ textDecoration: 'none', color: 'inherit' }}>
         <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
       </Link>
-      <Link href="/Account" passHref style={{ textDecoration: 'none', color: 'inherit' }}>
+      <Link href="/account" passHref style={{ textDecoration: 'none', color: 'inherit' }}>
         <MenuItem onClick={handleMenuClose}>Account</MenuItem>
       </Link>
       <MenuItem onClick={handleLogoutAndClose}>Logout</MenuItem>
@@ -212,10 +214,13 @@ const Navigation = () => {
             Your Video Site
           </Typography>
           { isLoggedIn ? 
-            <Avatar
-              src={avatarUrl}
-              onClick={handleMenuOpen}
-            /> 
+            <>
+              <Avatar
+                src={avatarUrl}
+                onClick={handleMenuOpen}
+              /> 
+              {renderMenu}
+            </>
           : <>
             <Link href="/register" passHref style={{ textDecoration: 'none', color: 'inherit' }}>
               <Button color="inherit">Register</Button>
@@ -226,7 +231,6 @@ const Navigation = () => {
             </>
           }
         </Toolbar>
-        {renderMenu}
       </AppBar>
       <Drawer variant="permanent" open={open}>
         <Toolbar />
