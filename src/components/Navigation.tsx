@@ -187,7 +187,8 @@ const Navigation = () => {
   const renderMenu = (
     <Menu
       anchorEl={anchorEl}
-      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+      transformOrigin={{ horizontal: 'right', vertical: 'top' }}
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
