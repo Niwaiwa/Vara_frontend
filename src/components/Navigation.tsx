@@ -112,7 +112,7 @@ const Navigation = () => {
   const dispatch = useDispatch();
 
   const serverURL = process.env.NEXT_PUBLIC_BACKEND_URL;
-  const avatarUrl = userInfo?.avatar ? `${serverURL}${userInfo?.avatar}` : '';
+  const avatarUrl = userInfo?.avatar ? `${serverURL}/${userInfo?.avatar}` : '';
 
   const [snackBarState, setSnackBarState] = useState<CustomState>({
     open: false,
