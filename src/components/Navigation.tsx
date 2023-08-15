@@ -25,6 +25,7 @@ import { RootState } from '../globalRedux/store';
 import { logout } from '../globalRedux/features/auth/authSlice';
 import axios from 'axios';
 import Snackbar, { SnackbarOrigin } from '@mui/material/Snackbar';
+import { useRouter } from 'next/router';
 
 
 const drawerWidth = 240;
@@ -111,6 +112,7 @@ const Navigation = () => {
   const allRatings = getAllRatings();
   const allThemeModes = getAllThemeModes();
   const dispatch = useDispatch();
+  const router = useRouter();
 
   const serverURL = process.env.NEXT_PUBLIC_BACKEND_URL;
   const avatarUrl = userInfo?.avatar ? `${serverURL}/${userInfo?.avatar}` : '';
@@ -145,6 +147,7 @@ const Navigation = () => {
       // console.log('ログアウト成功:', response.data);
       // 他の処理を追加
       setSnackBarState({ ...snackBarState, open: true, message: 'Logout success' });
+      router.push('/login');
     } catch (error) {
       // console.error('Logout failed:', error);
       // 他の処理を追加
