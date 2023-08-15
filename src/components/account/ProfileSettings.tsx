@@ -4,22 +4,10 @@ import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../globalRedux/store';
 import { setUserInfo } from '../../globalRedux/features/auth/authSlice';
-import Snackbar, { SnackbarOrigin } from '@mui/material/Snackbar';
+import { setMessageSnackBarState } from '../../globalRedux/features/snackbar/messageSnackBarSlice';
 
-
-interface CustomState extends SnackbarOrigin {
-  open: boolean;
-  message?: string;
-}
 
 const ProfileSettings: React.FC = () => {
-
-  const [snackBarState, setSnackBarState] = useState<CustomState>({
-    open: false,
-    vertical: 'top',
-    horizontal: 'center',
-  });
-  const { vertical, horizontal, open: snackBarOpen, message } = snackBarState;
 
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [headerFile, setHeaderFile] = useState<File | null>(null);
@@ -83,9 +71,9 @@ const ProfileSettings: React.FC = () => {
       const response = await axios.put(`${serverURL}/api/users/`, loginData, { headers: header });
       const userInfo = response.data;
       dispatch(setUserInfo(userInfo));
-      setSnackBarState({ ...snackBarState, open: true, message: 'Update success' });
+      dispatch(setMessageSnackBarState({ open: true, message: 'Update success' }));
     } catch (error) {
-      setSnackBarState({ ...snackBarState, open: true, message: 'Update failed' });
+      dispatch(setMessageSnackBarState({ open: true, message: 'Update failed' }));
     }
   };
 
@@ -152,14 +140,6 @@ const ProfileSettings: React.FC = () => {
           </form>
         </Box>
       </Box>
-      <Snackbar
-        anchorOrigin={{ vertical: vertical, horizontal: horizontal }}
-        autoHideDuration={3000}
-        open={snackBarOpen}
-        onClose={() => setSnackBarState({ ...snackBarState, open: false })}
-        message={message}
-        key={vertical + horizontal}
-      />
     </Box>
   );
 };

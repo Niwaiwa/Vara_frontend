@@ -7,6 +7,7 @@ import localeReducer from "./features/sidebar/localeSlice";
 import ratingReducer from "./features/sidebar/ratingSlice";
 import themeModeReducer from "./features/sidebar/themeModeSlice";
 import authReducer from "./features/auth/authSlice";
+import messageSnackBarReducer from "./features/snackbar/messageSnackBarSlice";
 import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist'
 import storage from 'redux-persist/lib/storage' // defaults to localStorage for web
 
@@ -17,6 +18,7 @@ const rootReducer = combineReducers({
   rating: ratingReducer,
   themeMode: themeModeReducer,
   auth: authReducer,
+  messageSnackBar: messageSnackBarReducer,
   //add all your reducers here
 },);
 

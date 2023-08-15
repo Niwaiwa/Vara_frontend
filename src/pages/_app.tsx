@@ -11,6 +11,7 @@ import Footer from '../components/Footer';
 import Section from "../components/Section";
 import ReduxProvider from "../globalRedux/provider";
 import ReduxPersistGate from '@/globalRedux/persistGate';
+import MessageSnackBar from '@/components/MessageSnackBar';
 
 
 // Client-side cache, shared for the whole session of the user in the browser.
@@ -37,6 +38,7 @@ export default function MyApp(props: MyAppProps) {
               <Component {...pageProps} />  
             </Section>
             <Footer />
+            <MessageSnackBar />
           </ThemeProvider>
         </CacheProvider>
       </ReduxPersistGate>

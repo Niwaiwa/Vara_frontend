@@ -5,22 +5,10 @@ import { login } from '../globalRedux/features/auth/authSlice';
 import { TextField, Button, Typography } from '@mui/material';
 import axios from 'axios';
 import { useRouter } from 'next/router';
-import Snackbar, { SnackbarOrigin } from '@mui/material/Snackbar';
+import { setMessageSnackBarState } from '../globalRedux/features/snackbar/messageSnackBarSlice';
 
-
-interface CustomState extends SnackbarOrigin {
-  open: boolean;
-  message?: string;
-}
 
 const LoginForm: React.FC = () => {
-  const [snackBarState, setSnackBarState] = useState<CustomState>({
-    open: false,
-    vertical: 'top',
-    horizontal: 'center',
-  });
-
-  const { vertical, horizontal, open, message } = snackBarState;
 
   const dispatch = useDispatch();
   // const [email, setEmail] = useState('');
@@ -56,11 +44,11 @@ const LoginForm: React.FC = () => {
         userInfo: userInfo,
       }
       dispatch(login(payload));
-      setSnackBarState({ ...snackBarState, open: true, message: 'Login success' });
+      dispatch(setMessageSnackBarState({ open: true, message: 'Login success' }));
       router.push('/');
     } catch (error) {
       // console.error('Login failed:', error);
-      setSnackBarState({ ...snackBarState, open: true, message: 'Login failed' });
+      dispatch(setMessageSnackBarState({ open: true, message: 'Login failed' }));
     }
   };
 
@@ -75,7 +63,7 @@ const LoginForm: React.FC = () => {
       return response.data;
     } catch (error) {
       // console.error('Get user info failed:', error);
-      setSnackBarState({ ...snackBarState, open: true, message: 'Get user info failed' });
+      dispatch(setMessageSnackBarState({ open: true, message: 'Get user info failed' }));
     }
   };
 
@@ -123,14 +111,6 @@ const LoginForm: React.FC = () => {
       <Typography variant="body2">
         <Link href="resetpw" passHref>Forgot your password?</Link>
       </Typography>
-      <Snackbar
-        anchorOrigin={{ vertical: vertical, horizontal: horizontal }}
-        autoHideDuration={3000}
-        open={open}
-        onClose={() => setSnackBarState({ ...snackBarState, open: false })}
-        message={message}
-        key={vertical + horizontal}
-      />
     </div>
   );
 };
