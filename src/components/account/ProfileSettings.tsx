@@ -1,20 +1,92 @@
 import React, { useState } from 'react';
-import { Avatar, Box, TextField, Typography, Button } from '@mui/material';
+import { Box, TextField, Typography, Button } from '@mui/material';
+import axios from 'axios';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from '../../globalRedux/store';
+import { setUserInfo } from '../../globalRedux/features/auth/authSlice';
+import Snackbar, { SnackbarOrigin } from '@mui/material/Snackbar';
+
+
+interface CustomState extends SnackbarOrigin {
+  open: boolean;
+  message?: string;
+}
 
 const ProfileSettings: React.FC = () => {
 
+  const [snackBarState, setSnackBarState] = useState<CustomState>({
+    open: false,
+    vertical: 'top',
+    horizontal: 'center',
+  });
+  const { vertical, horizontal, open: snackBarOpen, message } = snackBarState;
+
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [headerFile, setHeaderFile] = useState<File | null>(null);
   const [description, setDescription] = useState<string>('');
+  const token = useSelector((state: RootState) => state.auth.token);
+  const dispatch = useDispatch();
+
+  const handleChangeAvatar = () => {
+    const file = document.getElementById('avatar') as HTMLInputElement;
+    if (file.files !== null) {
+      if (file.files.length === 0) return;
+      const reader = new FileReader();
+      reader.readAsDataURL(file.files[0]);
+      reader.onload = () => {
+        setAvatarFile(file.files[0]);
+      };
+    }
+  };
 
   const handleUploadAvatar = () => {
-    console.log('Avatar uploaded');
+    if (avatarFile === null) return;
+    sendUserUpdate({
+      'avatar': avatarFile,
+    });
+  };
+
+  const handleChangeHeader = () => {
+    const file = document.getElementById('header') as HTMLInputElement;
+    if (file.files !== null) {
+      if (file.files.length === 0) return;
+      const reader = new FileReader();
+      reader.readAsDataURL(file.files[0]);
+      reader.onload = () => {
+        setHeaderFile(file.files[0]);
+      };
+    }
   };
 
   const handleUploadHeader = () => {
-    console.log('Header uploaded');
+    if (headerFile === null) return;
+    sendUserUpdate({
+      'header': headerFile,
+    });    
   };
 
   const handleUploadDescription = () => {
-    console.log('Description uploaded');
+    sendUserUpdate({
+      'description': description,
+    });
+  };
+
+  const sendUserUpdate = async (data: object) => {
+    try {
+      let loginData = {...data};
+      const header = {
+        'Content-Type': 'multipart/form-data',
+        'Authorization': `Bearer ${token}`,
+      }
+
+      const serverURL = process.env.NEXT_PUBLIC_BACKEND_URL;
+      const response = await axios.put(`${serverURL}/api/users/`, loginData, { headers: header });
+      const userInfo = response.data;
+      dispatch(setUserInfo(userInfo));
+      setSnackBarState({ ...snackBarState, open: true, message: 'Update success' });
+    } catch (error) {
+      setSnackBarState({ ...snackBarState, open: true, message: 'Update failed' });
+    }
   };
 
   return (
@@ -27,7 +99,7 @@ const ProfileSettings: React.FC = () => {
         <Box sx={{ marginTop: '15px' }}>
           <form>
             <div>
-              <input type="file" />
+              <input type="file" id="avatar" name="avatar" accept="image/png, image/jpeg" onChange={handleChangeAvatar} />
             </div>
             <div style={{ marginTop: '15px' }}>
               <Button variant="contained" color="primary" onClick={handleUploadAvatar}>
@@ -44,7 +116,7 @@ const ProfileSettings: React.FC = () => {
         <Box sx={{ marginTop: '15px' }}>
           <form>
             <div>
-              <input type="file" />
+              <input type="file" id="header" name="header" accept="image/png, image/jpeg" onChange={handleChangeHeader} />
             </div>
             <div style={{ marginTop: '15px' }}>
               <Button variant="contained" color="primary" onClick={handleUploadHeader}>
@@ -80,6 +152,14 @@ const ProfileSettings: React.FC = () => {
           </form>
         </Box>
       </Box>
+      <Snackbar
+        anchorOrigin={{ vertical: vertical, horizontal: horizontal }}
+        autoHideDuration={3000}
+        open={snackBarOpen}
+        onClose={() => setSnackBarState({ ...snackBarState, open: false })}
+        message={message}
+        key={vertical + horizontal}
+      />
     </Box>
   );
 };
