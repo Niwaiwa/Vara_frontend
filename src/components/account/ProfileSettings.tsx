@@ -71,9 +71,9 @@ const ProfileSettings: React.FC = () => {
       const response = await axios.put(`${serverURL}/api/users/`, loginData, { headers: header });
       const userInfo = response.data;
       dispatch(setUserInfo(userInfo));
-      dispatch(setMessageSnackBarState({ open: true, message: 'Update success' }));
+      dispatch(setMessageSnackBarState({ message: 'Update success' }));
     } catch (error) {
-      dispatch(setMessageSnackBarState({ open: true, message: 'Update failed' }));
+      dispatch(setMessageSnackBarState({ message: 'Update failed' }));
     }
   };
 

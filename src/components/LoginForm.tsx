@@ -44,11 +44,11 @@ const LoginForm: React.FC = () => {
         userInfo: userInfo,
       }
       dispatch(login(payload));
-      dispatch(setMessageSnackBarState({ open: true, message: 'Login success' }));
+      dispatch(setMessageSnackBarState({ message: 'Login success' }));
       router.push('/');
     } catch (error) {
       // console.error('Login failed:', error);
-      dispatch(setMessageSnackBarState({ open: true, message: 'Login failed' }));
+      dispatch(setMessageSnackBarState({ message: 'Login failed' }));
     }
   };
 
@@ -63,7 +63,7 @@ const LoginForm: React.FC = () => {
       return response.data;
     } catch (error) {
       // console.error('Get user info failed:', error);
-      dispatch(setMessageSnackBarState({ open: true, message: 'Get user info failed' }));
+      dispatch(setMessageSnackBarState({ message: 'Get user info failed' }));
     }
   };
 
