@@ -199,6 +199,9 @@ const Navigation = () => {
       <Link href={`/profile/${encodeURIComponent(username)}`} passHref style={{ textDecoration: 'none', color: 'inherit' }}>
         <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
       </Link>
+      <Link href="/friend" passHref style={{ textDecoration: 'none', color: 'inherit' }}>
+        <MenuItem onClick={handleMenuClose}>Friend</MenuItem>
+      </Link>      
       <Link href="/account" passHref style={{ textDecoration: 'none', color: 'inherit' }}>
         <MenuItem onClick={handleMenuClose}>Account</MenuItem>
       </Link>
