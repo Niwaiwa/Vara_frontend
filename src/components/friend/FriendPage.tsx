@@ -11,25 +11,25 @@ const FriendPage: React.FC = () => {
   };
 
   return (
-      <Paper elevation={0} sx={{ padding: '15px' }}>
-        <Box sx={{ display: 'flex' }}>
-          <Box sx={{ flexGrow: 1, marginRight: '40px' }}>
-            {selectedTab === 'friends' ? <Friends /> : <FriendRequests />}
-          </Box>
-          <List sx={{ width: '20%' }}>
-            <ListItem disablePadding>
-              <ListItemButton selected={selectedTab === 'friends'} onClick={() => handleTabChange('friends')}>
-                <ListItemText primary="Friends" />
-              </ListItemButton>
-            </ListItem>
-            <ListItem disablePadding>
-              <ListItemButton selected={selectedTab === 'friendRequests'} onClick={() => handleTabChange('friendRequests')}>
-                <ListItemText primary="FriendRequests" />
-              </ListItemButton>
-            </ListItem>
-          </List>
+    <Paper elevation={0} sx={{ padding: '15px' }}>
+      <Box sx={{ display: 'flex' }}>
+        <List sx={{ width: '20%', marginRight: '40px' }}>
+          <ListItem disablePadding>
+            <ListItemButton selected={selectedTab === 'friends'} onClick={() => handleTabChange('friends')}>
+              <ListItemText primary="Friends" />
+            </ListItemButton>
+          </ListItem>
+          <ListItem disablePadding>
+            <ListItemButton selected={selectedTab === 'friendRequests'} onClick={() => handleTabChange('friendRequests')}>
+              <ListItemText primary="FriendRequests" />
+            </ListItemButton>
+          </ListItem>
+        </List>
+        <Box sx={{ flexGrow: 1 }}>
+          {selectedTab === 'friends' ? <Friends /> : <FriendRequests />}
         </Box>
-      </Paper>
+      </Box>
+    </Paper>
   );
 };
 

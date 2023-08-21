@@ -12,9 +12,9 @@ const FriendRequests: React.FC = () => {
 
   return (
     <Box>
-      <Typography variant="h6">Account Settings</Typography>
+      <Typography variant="h6">Friend Requests</Typography>
       <Box sx={{ marginTop: '15px', padding: '15px', backgroundColor: '#f5f5f5' }}>
-
+        <Typography variant="body2">{`You don't have any friends`}</Typography>
       </Box>
     </Box>
   );
