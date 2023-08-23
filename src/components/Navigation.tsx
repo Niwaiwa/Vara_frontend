@@ -26,6 +26,7 @@ import { logout } from '../globalRedux/features/auth/authSlice';
 import axios from 'axios';
 import Snackbar, { SnackbarOrigin } from '@mui/material/Snackbar';
 import { useRouter } from 'next/router';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 
 const drawerWidth = 240;
@@ -99,6 +100,10 @@ const Navigation = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const isMenuOpen = Boolean(anchorEl);
   const theme = useTheme();
+  // const matches = useMediaQuery(theme.breakpoints.up('sm') || theme.breakpoints.up('xs'));
+  const medium = useMediaQuery(theme.breakpoints.down('md'));
+  const small = useMediaQuery(theme.breakpoints.down('sm'));
+  const extraSmall = useMediaQuery(theme.breakpoints.down('xs'));
 
   const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
   const open = useSelector((state: RootState) => state.sidebar.open);
@@ -239,7 +244,13 @@ const Navigation = () => {
           }
         </Toolbar>
       </AppBar>
-      <Drawer variant="permanent" open={open}>
+      <Drawer 
+        variant="permanent"
+        open={open}
+        PaperProps={{ elevation: medium || small || extraSmall ? open ? 24 : 0 : 0 }}
+        sx={{ 
+          display: medium || small || extraSmall ? open ? 'block' : 'none' : 'block',
+      }}>
         <Toolbar />
         <Box>
           <List>
