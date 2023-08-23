@@ -56,7 +56,8 @@ const FriendRequests: React.FC = () => {
               <Grid
                 item
                 xs={12}
-                sm={6}
+                sm={12}
+                md={6}
                 key={friendRequest.id}
                 sx={{ 
                   paddingRight: '15px',

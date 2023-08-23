@@ -12,6 +12,8 @@ import { RootState } from '../globalRedux/store';
 import axios from 'axios';
 import { setMessageSnackBarState } from '../globalRedux/features/snackbar/messageSnackBarSlice';
 import { useDispatch } from 'react-redux';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 
 interface AvatarProps {
@@ -50,6 +52,10 @@ const AvatarUser: React.FC<AvatarProps> = (props) => {
   const [acceptedFriendRequest, setAcceptedFriendRequest] = React.useState<boolean>(false);
   const [rejectedFriendRequest, setRejectedFriendRequest] = React.useState<boolean>(false);
 
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up('sm'));
+  const startIconStyle = { mr: {matches} ? 0 : 1, ml: {matches} ? 0 : 0.5 };
+  
   const dispatch = useDispatch();
 
   const handleUnfriend = async () => {
@@ -235,20 +241,23 @@ const AvatarUser: React.FC<AvatarProps> = (props) => {
       }
       <Box>
         {useType === 'friends' ?
+          <Box>
           <Button 
             variant="contained" 
             color="primary" 
-            startIcon={!notFriend ? <PersonOffIcon /> : !friendRequest ? <PersonAddIcon /> : <PendingIcon />}
+            startIcon={!notFriend ? <PersonOffIcon sx={startIconStyle} /> : !friendRequest 
+              ? <PersonAddIcon sx={startIconStyle} /> : <PendingIcon sx={startIconStyle} />}
             onClick={!notFriend ? handleUnfriend : !friendRequest ? handleAddFriend : handleCancelFriendRequest}
           >
-            {!notFriend ? 'Unfriend' : !friendRequest ? 'Add friend' : 'Cancel request'}
+            {!matches ? null : !notFriend ? 'Unfriend' : !friendRequest ? 'Add friend' : 'Cancel request'}
           </Button>
+          </Box>
         : useType === 'friendRequest' ?
           acceptedFriendRequest ?
             <Button
               variant="contained"
               color="primary"
-              startIcon={<DoneIcon />}
+              startIcon={<DoneIcon sx={startIconStyle} />}
               disabled
             >
               Accepted
@@ -257,31 +266,33 @@ const AvatarUser: React.FC<AvatarProps> = (props) => {
             <Button 
               variant="contained" 
               color="primary" 
-              startIcon={<ClearIcon />}
+              startIcon={<ClearIcon sx={startIconStyle} />}
               disabled
             >
               Rejected
             </Button>
           :
-            <>
+            <Box>
+            {/* <> */}
               <Button
                 variant="contained" 
                 color="primary" 
                 style={{ marginRight: '15px' }}
-                startIcon={<CheckIcon />}
+                startIcon={<CheckIcon sx={startIconStyle} />}
                 onClick={handleAcceptFriendRequest}
               >
-                Accept
+                {matches ? 'Accept' : null}
               </Button>
               <Button 
                 variant="contained" 
                 color="primary"
-                startIcon={<ClearIcon />}
+                startIcon={<ClearIcon sx={startIconStyle} />}
                 onClick={handleRejectFriendRequest}
               >
-                Reject
+                {matches ? 'Reject' : null}
               </Button>
-            </>
+            {/* </> */}
+            </Box>
         : null
         }
       </Box>

@@ -56,7 +56,8 @@ const Friends: React.FC = () => {
               <Grid
                 item
                 xs={12}
-                sm={6}
+                sm={12}
+                md={6}
                 key={friend.id}
                 sx={{ 
                   paddingRight: '15px',
