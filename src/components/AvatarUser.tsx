@@ -4,6 +4,9 @@ import { Avatar, Box, Typography, Button, Grid } from '@mui/material';
 import PersonOffIcon from '@mui/icons-material/PersonOff';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import PendingIcon from '@mui/icons-material/Pending';
+import CheckIcon from '@mui/icons-material/Check';
+import ClearIcon from '@mui/icons-material/Clear';
+import DoneIcon from '@mui/icons-material/Done';
 import { useSelector } from 'react-redux';
 import { RootState } from '../globalRedux/store';
 import axios from 'axios';
@@ -14,17 +17,25 @@ import { useDispatch } from 'react-redux';
 interface AvatarProps {
   sx?: any;
   children?: React.ReactNode;
-  friendUser?: any;
   useType?: string;
+  friendUser?: any | undefined;
+  noNickname?: boolean | undefined;
+  noUsername?: boolean | undefined;
 }
 
 
 const AvatarUser: React.FC<AvatarProps> = (props) => {
-  const { friendUser, useType } = props;
+  const { 
+    friendUser, 
+    noNickname = true, 
+    noUsername = true, 
+    useType = '', 
+  } = props;
   const friendUserId = friendUser.id;
   const username = friendUser.username;
   const nickname = friendUser.nickname;
   const avatar = friendUser.avatar;
+
   const profileUrl = `/profile/${username}`;
 
   const serverURL = process.env.NEXT_PUBLIC_BACKEND_URL;
@@ -36,6 +47,8 @@ const AvatarUser: React.FC<AvatarProps> = (props) => {
 
   const [notFriend, setNotFriend] = React.useState<boolean>(false);
   const [friendRequest, setFriendRequest] = React.useState<boolean>(false);
+  const [acceptedFriendRequest, setAcceptedFriendRequest] = React.useState<boolean>(false);
+  const [rejectedFriendRequest, setRejectedFriendRequest] = React.useState<boolean>(false);
 
   const dispatch = useDispatch();
 
@@ -108,6 +121,52 @@ const AvatarUser: React.FC<AvatarProps> = (props) => {
     }
   }
 
+  const handleAcceptFriendRequest = async () => {
+    try{
+      if (currentUserId === '' || friendUserId === '') return;
+
+      const url = `${serverURL}/api/users/${currentUserId}/friends/requests/accept`;
+      const requestData = {
+        user_id: friendUserId,
+      }
+
+      const header = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      }
+
+      const response = await axios.post(url, requestData, { headers: header });
+      setAcceptedFriendRequest(true);
+      dispatch(setMessageSnackBarState({ message: 'Accept friend request success' }));
+    } catch (error) {
+      console.log(error);
+      dispatch(setMessageSnackBarState({ message: 'Accept friend request failed' }));
+    }
+  }
+
+  const handleRejectFriendRequest = async () => {
+    try{
+      if (currentUserId === '' || friendUserId === '') return;
+
+      const url = `${serverURL}/api/users/${currentUserId}/friends/requests/reject`;
+      const requestData = {
+        user_id: friendUserId,
+      }
+
+      const header = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      }
+
+      const response = await axios.post(url, requestData, { headers: header });
+      setRejectedFriendRequest(true);
+      dispatch(setMessageSnackBarState({ message: 'Reject friend request success' }));
+    } catch (error) {
+      console.log(error);
+      dispatch(setMessageSnackBarState({ message: 'Reject friend request failed' }));
+    }
+  }
+
   return (
     <Box sx={{ 
       display: 'flex',
@@ -140,6 +199,7 @@ const AvatarUser: React.FC<AvatarProps> = (props) => {
           />
         </Link>
       </Box>
+      {!noNickname && !noUsername ? null :
       <Box
         sx={{
           width: '100%',
@@ -148,6 +208,7 @@ const AvatarUser: React.FC<AvatarProps> = (props) => {
           flex: 1,
         }}
       >
+        {!noNickname ? null : 
         <Link href={profileUrl} passHref style={{ textDecoration: 'none', color: 'inherit' }} title={nickname}>
           <div style={{ 
             fontWeight: 400,
@@ -159,6 +220,8 @@ const AvatarUser: React.FC<AvatarProps> = (props) => {
             '-webkit-box-orient': 'vertical',
           }}>{nickname}</div>
         </Link>
+        }
+        {!noUsername ? null :
         <div style={{ 
           fontSize: '0.75rem',
           overflow: 'hidden',
@@ -167,7 +230,9 @@ const AvatarUser: React.FC<AvatarProps> = (props) => {
           '-webkit-line-clamp': '1',
           '-webkit-box-orient': 'vertical',
         }}>@{username}</div>
+        }
       </Box>
+      }
       <Box>
         {useType === 'friends' ?
           <Button 
@@ -179,10 +244,44 @@ const AvatarUser: React.FC<AvatarProps> = (props) => {
             {!notFriend ? 'Unfriend' : !friendRequest ? 'Add friend' : 'Cancel request'}
           </Button>
         : useType === 'friendRequest' ?
-        <>
-          <Button variant="contained" color="primary" style={{ marginRight: '15px' }}>Accept</Button>
-          <Button variant="contained" color="primary">Reject</Button>
-        </>
+          acceptedFriendRequest ?
+            <Button
+              variant="contained"
+              color="primary"
+              startIcon={<DoneIcon />}
+              disabled
+            >
+              Accepted
+            </Button>
+          : rejectedFriendRequest ?
+            <Button 
+              variant="contained" 
+              color="primary" 
+              startIcon={<ClearIcon />}
+              disabled
+            >
+              Rejected
+            </Button>
+          :
+            <>
+              <Button
+                variant="contained" 
+                color="primary" 
+                style={{ marginRight: '15px' }}
+                startIcon={<CheckIcon />}
+                onClick={handleAcceptFriendRequest}
+              >
+                Accept
+              </Button>
+              <Button 
+                variant="contained" 
+                color="primary"
+                startIcon={<ClearIcon />}
+                onClick={handleRejectFriendRequest}
+              >
+                Reject
+              </Button>
+            </>
         : null
         }
       </Box>
