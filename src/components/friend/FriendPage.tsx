@@ -14,8 +14,8 @@ const FriendPage: React.FC = () => {
     <Paper elevation={0} sx={{ padding: '15px' }}>
       <Box sx={{ display: 'flex' }}>
         <Grid container>
-          <Grid item xs={12} sm={12} md={3} lg={2}>
-            <List sx={{ marginRight: '40px' }}>
+          <Grid item xs={12} sm={12} md={3} lg={3}>
+            <List sx={{ marginRight: { xs: '0px', sm: '0px', md: '40px' } }}>
               <ListItem disablePadding>
                 <ListItemButton selected={selectedTab === 'friends'} onClick={() => handleTabChange('friends')}>
                   <ListItemText primary="Friends" />
@@ -28,7 +28,7 @@ const FriendPage: React.FC = () => {
               </ListItem>
             </List>
           </Grid>
-          <Grid item xs={12} sm={12} md={9} lg={10}>
+          <Grid item xs={12} sm={12} md={9} lg={9}>
             <Box sx={{ flexGrow: 1 }}>
               {selectedTab === 'friends' ? <Friends /> : <FriendRequests />}
             </Box>
