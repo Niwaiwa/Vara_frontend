@@ -14,6 +14,10 @@ import ForumIcon from '@mui/icons-material/Forum';
 import LanguageIcon from '@mui/icons-material/Language';
 import StarIcon from '@mui/icons-material/Star';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import PersonIcon from '@mui/icons-material/Person';
+import SettingsIcon from '@mui/icons-material/Settings';
+import LogoutIcon from '@mui/icons-material/Logout';
 import PlayCircleFilledIcon from '@mui/icons-material/PlayCircleFilled';
 import { styled, useTheme, Theme, CSSObject } from '@mui/material/styles';
 import { useSelector, useDispatch } from 'react-redux';
@@ -202,15 +206,36 @@ const Navigation = () => {
     >
       {/* Add user menu items here */}
       <Link href={`/profile/${encodeURIComponent(username)}`} passHref style={{ textDecoration: 'none', color: 'inherit' }}>
-        <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+        <MenuItem onClick={handleMenuClose}>
+        <ListItemIcon>
+          <AccountCircleIcon />
+        </ListItemIcon>
+          Profile
+        </MenuItem>
       </Link>
       <Link href="/friend" passHref style={{ textDecoration: 'none', color: 'inherit' }}>
-        <MenuItem onClick={handleMenuClose}>Friend</MenuItem>
+        <MenuItem onClick={handleMenuClose}>
+        <ListItemIcon>
+          <PersonIcon />
+        </ListItemIcon>
+          Friend
+        </MenuItem>
       </Link>      
       <Link href="/account" passHref style={{ textDecoration: 'none', color: 'inherit' }}>
-        <MenuItem onClick={handleMenuClose}>Account</MenuItem>
+        <MenuItem onClick={handleMenuClose}>
+        <ListItemIcon>
+          <SettingsIcon />
+        </ListItemIcon>
+          Account
+        </MenuItem>
       </Link>
-      <MenuItem onClick={handleLogoutAndClose}>Logout</MenuItem>
+      <Divider />
+      <MenuItem onClick={handleLogoutAndClose}>
+      <ListItemIcon>
+        <LogoutIcon />
+      </ListItemIcon>
+        Logout
+      </MenuItem>
     </Menu>
   );
 
