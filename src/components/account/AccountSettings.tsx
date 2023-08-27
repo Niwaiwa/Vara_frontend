@@ -5,6 +5,8 @@ import axios from 'axios';
 import { RootState } from '../../globalRedux/store';
 import { setUserInfo } from '../../globalRedux/features/auth/authSlice';
 import { setMessageSnackBarState } from '../../globalRedux/features/snackbar/messageSnackBarSlice';
+import { logout } from '../../globalRedux/features/auth/authSlice';
+import { useRouter } from 'next/router';
 
 
 const AccountSettings: React.FC = () => {
@@ -13,6 +15,7 @@ const AccountSettings: React.FC = () => {
   const [password, setPassword] = useState<string>('');
   const token = useSelector((state: RootState) => state.auth.token);
   const dispatch = useDispatch();
+  const router = useRouter();
 
   const handleUploadNickname = () => {
     if (nickname === '') return;
@@ -41,7 +44,13 @@ const AccountSettings: React.FC = () => {
       const userInfo = response.data;
       dispatch(setUserInfo(userInfo));
       dispatch(setMessageSnackBarState({ message: 'Update success' }));
-    } catch (error) {
+    } catch (error: any) {
+      if (error.response.status === 403) {
+        dispatch(setMessageSnackBarState({ message: 'Authentication failed. Please login again' }));
+        dispatch(logout());
+        router.push('/login');
+        return;
+      }
       dispatch(setMessageSnackBarState({ message: 'Update failed' }));
     }
   };

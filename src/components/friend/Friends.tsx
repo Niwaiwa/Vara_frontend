@@ -7,6 +7,7 @@ import AvatarUser from '../AvatarUser';
 import useSWRImmutable from 'swr/immutable';
 import { useRouter } from 'next/router';
 import { logout } from '../../globalRedux/features/auth/authSlice';
+import { setMessageSnackBarState } from '../../globalRedux/features/snackbar/messageSnackBarSlice';
 
 
 const fetcherWithHeader = (url: string, token: string) => axios.get(url, { headers: { 'Authorization': `Bearer ${token}` } }).then(res => res.data);
@@ -42,6 +43,7 @@ const Friends: React.FC = () => {
   if (isLoading) {
     return <div>Loading...</div>
   } else if (isError?.response.status === 403) {
+    dispatch(setMessageSnackBarState({ message: 'Authentication failed. Please login again' }));
     dispatch(logout());
     router.push('/login');
   }
