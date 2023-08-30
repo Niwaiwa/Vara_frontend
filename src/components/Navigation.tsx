@@ -305,24 +305,26 @@ const Navigation = () => {
           <Divider />
           <List>
             <ListItem disablePadding sx={{ display: 'block' }}>
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? 'initial' : 'center',
-                  px: 2.5,
-                }}
-              >
-                <ListItemIcon
+              <Link href="/videos" passHref style={{ textDecoration: 'none', color: 'inherit' }}>
+                <ListItemButton
                   sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : 'auto',
-                    justifyContent: 'center',
+                    minHeight: 48,
+                    justifyContent: open ? 'initial' : 'center',
+                    px: 2.5,
                   }}
                 >
-                  <VideoLibraryIcon />
-                </ListItemIcon>
-                <ListItemText primary={'Video'} sx={{ opacity: open ? 1 : 0 }} />
-              </ListItemButton>
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      mr: open ? 3 : 'auto',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <VideoLibraryIcon />
+                  </ListItemIcon>
+                  <ListItemText primary={'Video'} sx={{ opacity: open ? 1 : 0 }} />
+                </ListItemButton>
+              </Link>
             </ListItem>
             <ListItem disablePadding sx={{ display: 'block' }}>
               <ListItemButton
