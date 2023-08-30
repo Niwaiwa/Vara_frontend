@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Box, Container, List, ListItem, ListItemButton, ListItemText, Paper, 
   Grid, Typography, OutlinedInput, Select, MenuItem, Chip, Dialog, DialogTitle,
   DialogContent, FormControl, InputLabel, Input, Pagination, Button } from '@mui/material';
+import CircularProgress from '@mui/material/CircularProgress';
 import { SelectChangeEvent } from '@mui/material/Select';
 import axios from 'axios';
 import { setMessageSnackBarState } from '../../globalRedux/features/snackbar/messageSnackBarSlice';
@@ -24,14 +25,15 @@ const VideosPage: React.FC = () => {
   const [modalTagListPage, setModalTagListPage] = useState<number>(1);
   const [modalTagListTotalCount, setModalTagListTotalCount] = useState<number>(0);
   const [currentSelecttedSearchText, setCurrentSelecttedSearchText] = useState<string>('');
+  const [isModalDataLoading, setIsModalDataLoading] = useState<boolean>(false);
 
   const handleSortChange = (sort: string) => {
       setSort(sort);
   };
 
-  const handleTagChange = (event: SelectChangeEvent<string[]> | any) => {
-    setSelectedTags(event.target.value as string[]);
-  };
+  // const handleTagChange = (event: SelectChangeEvent<string[]> | any) => {
+  //   setSelectedTags(event.target.value as string[]);
+  // };
 
   const handleTagSelect = (tag: string) => {
     const index = selectedTags.indexOf(tag);
@@ -49,27 +51,30 @@ const VideosPage: React.FC = () => {
 
   const handleModalClose = () => {
     setIsModalOpen(false);
-    setModalTagListPage(1);
+    // setModalTagListPage(1);
   };
 
-  const setModalListPageAndGetTagList = (page: number) => {
-    setModalTagListPage(page);
-    getTagListRequest(currentSelecttedSearchText);
+  const handleModalListPageChange = (event: React.ChangeEvent<unknown>, value: number) => {
+    getTagListRequest(currentSelecttedSearchText, value);
   }
 
   // タグリストを取得
-  const getTagListRequest = async (text: string) => {
+  const getTagListRequest = async (text: string, page: number = 1) => {
     try {
+      setIsModalDataLoading(true);
       const serverURL = process.env.NEXT_PUBLIC_BACKEND_URL;
       const lowerCaseText = text.toLowerCase();
-      const url = `${serverURL}/api/tags?keyword=${lowerCaseText}&page=${modalTagListPage}`;
+      const url = `${serverURL}/api/tags?keyword=${lowerCaseText}&page=${page}`;
       const response = await axios.get(url);
       setModalTagListTotalCount(response.data.count);
       setModalTagList(response.data.data);
+      setModalTagListPage(page);
       setCurrentSelecttedSearchText(text);
+      setIsModalDataLoading(false);
     } catch (error) {
       console.log(error);
       dispatch(setMessageSnackBarState({ message: 'Get tag list failed' }));
+      setIsModalDataLoading(false);
     }
   }
 
@@ -147,9 +152,6 @@ const VideosPage: React.FC = () => {
                         <Dialog 
                           open={isModalOpen} 
                           onClose={handleModalClose}
-                          sx={{
-                            // maxWidth: '800px',
-                          }}
                         >
                           <DialogTitle>All Tags</DialogTitle>
                           <DialogContent>
@@ -157,7 +159,7 @@ const VideosPage: React.FC = () => {
                               {searchTagUpperCaseList.map((searchTag) => (
                                 <div key={searchTag} style={{ marginRight: '7.5px', marginBottom: '7.5px' }}>
                                   <Button 
-                                    variant="outlined" 
+                                    variant={searchTag === currentSelecttedSearchText ? 'contained' : 'outlined'}
                                     sx={{ minWidth: '32px', padding: '9.6px', textTransform: 'none', fontSize: '16px' }}
                                     onClick={() => getTagListRequest(searchTag)}>
                                     {searchTag}
@@ -166,22 +168,34 @@ const VideosPage: React.FC = () => {
                               ))}
                             </Box>
                             <Box sx={{ marginTop: '10px' }}>
-                              <Grid container>
-                                {modalTagList.map((tag) => (
-                                  <Grid key={tag.name} item xs={12} sm={6} md={4} lg={4}>
-                                    <Box sx={{ padding: '2px', cursor: 'pointer' }} onClick={() => handleTagSelect(tag.name)}>
-                                      + {tag.name}
-                                    </Box>
-                                  </Grid>
-                                ))}
-                              </Grid>
+                              {isModalDataLoading ? <CircularProgress /> :
+                                <Grid container>
+                                  {modalTagList.map((tag) => (
+                                    <Grid key={tag.name} item xs={12} sm={6} md={4} lg={4}>
+                                      <Box 
+                                        key={tag.name}
+                                        sx={{ 
+                                          padding: '2px', 
+                                          fontWeight: selectedTags.includes(tag.name) ? 'bold' : 'normal', 
+                                          cursor: 'pointer' 
+                                        }} 
+                                        onClick={() => handleTagSelect(tag.name)}>
+                                        + {tag.name}
+                                      </Box>
+                                    </Grid>
+                                  ))}
+                                </Grid>
+                              }
                             </Box>
                             <Box display={'flex'} justifyContent={'center'} sx={{ marginTop: '10px' }}>
-                              <Pagination 
-                                count={Math.ceil(modalTagListTotalCount / 10)} 
-                                page={modalTagListPage} 
-                                onChange={(e, page) => setModalListPageAndGetTagList(page)} 
-                              />
+                              {modalTagListTotalCount <= 30 ? null :
+                                <Pagination 
+                                  count={Math.ceil(modalTagListTotalCount / 30)} 
+                                  defaultPage={1}
+                                  page={modalTagListPage} 
+                                  onChange={(e, page) => handleModalListPageChange(e, page)}
+                                />
+                              }
                             </Box>
                           </DialogContent>
                         </Dialog>
