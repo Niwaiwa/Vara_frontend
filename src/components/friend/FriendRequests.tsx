@@ -80,7 +80,7 @@ const FriendRequests: React.FC = () => {
                   paddingLeft: '15px'
                 }}
               >
-                <AvatarUser friendUser={friendRequest} useType={'friendRequest'} />
+                <AvatarUser user={friendRequest} useType={'friendRequest'} />
               </Grid>
             ))}
           </Grid>

@@ -18,7 +18,7 @@ interface AvatarProps {
   sx?: any;
   children?: React.ReactNode;
   useType?: string;
-  friendUser?: any | undefined;
+  user?: any | undefined;
   noNickname?: boolean | undefined;
   noUsername?: boolean | undefined;
 }
@@ -26,15 +26,15 @@ interface AvatarProps {
 
 const AvatarUser: React.FC<AvatarProps> = (props) => {
   const { 
-    friendUser, 
+    user, 
     noNickname = true, 
     noUsername = true, 
     useType = '', 
   } = props;
-  const friendUserId = friendUser.id;
-  const username = friendUser.username;
-  const nickname = friendUser.nickname;
-  const avatar = friendUser.avatar;
+  const userId = user.id;
+  const username = user.username;
+  const nickname = user.nickname;
+  const avatar = user.avatar;
 
   const profileUrl = `/profile/${username}`;
 
@@ -54,11 +54,11 @@ const AvatarUser: React.FC<AvatarProps> = (props) => {
 
   const handleUnfriend = async () => {
     try{
-      if (currentUserId === '' || friendUserId === '') return;
+      if (currentUserId === '' || userId === '') return;
 
       const url = `${serverURL}/api/users/${currentUserId}/friends`;
       const requestData = {
-        friend_user_id: friendUserId,
+        friend_user_id: userId,
       }
 
       const header = {
@@ -77,11 +77,11 @@ const AvatarUser: React.FC<AvatarProps> = (props) => {
 
   const handleAddFriend = async () => {
     try{
-      if (currentUserId === '' || friendUserId === '') return;
+      if (currentUserId === '' || userId === '') return;
 
       const url = `${serverURL}/api/users/${currentUserId}/friends`;
       const requestData = {
-        friend_user_id: friendUserId,
+        friend_user_id: userId,
       }
 
       const header = {
@@ -100,11 +100,11 @@ const AvatarUser: React.FC<AvatarProps> = (props) => {
 
   const handleCancelFriendRequest = async () => {
     try{
-      if (currentUserId === '' || friendUserId === '') return;
+      if (currentUserId === '' || userId === '') return;
 
       const url = `${serverURL}/api/users/${currentUserId}/friends/requests/cancel`;
       const requestData = {
-        friend_user_id: friendUserId,
+        friend_user_id: userId,
       }
 
       const header = {
@@ -123,11 +123,11 @@ const AvatarUser: React.FC<AvatarProps> = (props) => {
 
   const handleAcceptFriendRequest = async () => {
     try{
-      if (currentUserId === '' || friendUserId === '') return;
+      if (currentUserId === '' || userId === '') return;
 
       const url = `${serverURL}/api/users/${currentUserId}/friends/requests/accept`;
       const requestData = {
-        user_id: friendUserId,
+        user_id: userId,
       }
 
       const header = {
@@ -146,11 +146,11 @@ const AvatarUser: React.FC<AvatarProps> = (props) => {
 
   const handleRejectFriendRequest = async () => {
     try{
-      if (currentUserId === '' || friendUserId === '') return;
+      if (currentUserId === '' || userId === '') return;
 
       const url = `${serverURL}/api/users/${currentUserId}/friends/requests/reject`;
       const requestData = {
-        user_id: friendUserId,
+        user_id: userId,
       }
 
       const header = {

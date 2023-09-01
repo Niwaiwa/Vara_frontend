@@ -79,7 +79,7 @@ const Friends: React.FC = () => {
                   paddingLeft: '15px'
                 }}
               >
-                <AvatarUser friendUser={friend} useType={'friends'} />
+                <AvatarUser user={friend} useType={'friends'} />
               </Grid>
             ))}
           </Grid>
