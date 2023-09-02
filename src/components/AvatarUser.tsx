@@ -19,17 +19,29 @@ interface AvatarProps {
   children?: React.ReactNode;
   useType?: string;
   user?: any | undefined;
-  noNickname?: boolean | undefined;
-  noUsername?: boolean | undefined;
+  useNickname?: boolean | undefined;
+  useUsername?: boolean | undefined;
+  useCreatedAt?: boolean | undefined;
+  sameFontSize?: boolean | undefined;
+  useLayerMarginTopBottom?: boolean | undefined;
+  smallAvatar?: boolean | undefined;
+  contentCreatedAt?: string | undefined;
+  fontSize?: number | undefined;
 }
 
 
 const AvatarUser: React.FC<AvatarProps> = (props) => {
   const { 
     user, 
-    noNickname = true, 
-    noUsername = true, 
+    useNickname = true, 
+    useUsername = true, 
+    useCreatedAt = true,
+    sameFontSize = false,
+    useLayerMarginTopBottom = true,
+    smallAvatar = false,
+    fontSize = 1,
     useType = '', 
+    contentCreatedAt,
   } = props;
   const userId = user.id;
   const username = user.username;
@@ -171,19 +183,19 @@ const AvatarUser: React.FC<AvatarProps> = (props) => {
     <Box sx={{ 
       display: 'flex',
       alignItems: 'center',
-      marginTop: '15px',
-      marginBottom: '15px',
+      marginTop: useLayerMarginTopBottom ? '15px' : '0px',
+      marginBottom: useLayerMarginTopBottom ? '15px' : '0px',
     }}>
       <Box
         sx={{
           display: 'flex',
           zIndex: 100,
           position: 'relative',
-          maxWidth: '60px',
-          minWidth: '60px',
           marginRight: '15px',
-          minHeight: '60px',
-          maxHeight: '60px',
+          maxWidth: smallAvatar ? '28px' : '60px',
+          minWidth: smallAvatar ? '28px' : '60px',  
+          minHeight: smallAvatar ? '28px' : '60px',
+          maxHeight: smallAvatar ? '28px' : '60px',
         }}
       >
         <Link href={profileUrl} passHref style={{ textDecoration: 'none', color: 'inherit' }}>
@@ -199,7 +211,7 @@ const AvatarUser: React.FC<AvatarProps> = (props) => {
           />
         </Link>
       </Box>
-      {!noNickname && !noUsername ? null :
+      {!useNickname && !useUsername && !useCreatedAt ? null :
       <Box
         sx={{
           width: '100%',
@@ -208,28 +220,38 @@ const AvatarUser: React.FC<AvatarProps> = (props) => {
           flex: 1,
         }}
       >
-        {!noNickname ? null : 
+        {!useNickname ? null : 
         <Link href={profileUrl} passHref style={{ textDecoration: 'none', color: 'inherit' }} title={nickname}>
           <div style={{ 
             fontWeight: 400,
-            fontSize: '1rem',
+            fontSize: fontSize !== undefined ? '${fontSize}rem' : '1rem',
             overflow: 'hidden',
             wordWrap: 'anywhere',
             display: '-webkit-box',
-            '-webkit-line-clamp': '1',
-            '-webkit-box-orient': 'vertical',
+            'WebkitLineClamp': '1',
+            'WebkitBoxOrient': 'vertical',
           }}>{nickname}</div>
         </Link>
         }
-        {!noUsername ? null :
+        {!useUsername ? null :
         <div style={{ 
-          fontSize: '0.75rem',
+          fontSize: sameFontSize ? fontSize !== undefined ? '${fontSize}rem' : '1rem' : '0.75rem',
           overflow: 'hidden',
           wordWrap: 'anywhere',
           display: '-webkit-box',
-          '-webkit-line-clamp': '1',
-          '-webkit-box-orient': 'vertical',
+          'WebkitLineClamp': '1',
+          'WebkitBoxOrient': 'vertical',
         }}>@{username}</div>
+        }
+        {!useCreatedAt ? null :
+        <div style={{ 
+          fontSize: fontSize !== undefined ? '${fontSize}rem' : '1rem',
+          overflow: 'hidden',
+          wordWrap: 'anywhere',
+          display: '-webkit-box',
+          'WebkitLineClamp': '1',
+          'WebkitBoxOrient': 'vertical',
+        }}>{contentCreatedAt}</div>
         }
       </Box>
       }

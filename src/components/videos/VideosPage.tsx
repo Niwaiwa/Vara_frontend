@@ -1,19 +1,54 @@
 import React, { useState } from 'react';
-import { Box, Container, List, ListItem, ListItemButton, ListItemText, Paper, 
-  Grid, Typography, OutlinedInput, Select, MenuItem, Chip, Dialog, DialogTitle,
-  DialogContent, FormControl, InputLabel, Input, Pagination, Button } from '@mui/material';
+import { Box, List, ListItem, ListItemButton, ListItemText, Paper, 
+  Grid, Typography, Chip, Dialog, DialogTitle, DialogContent, FormControl, 
+  Input, Pagination, Button } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
 import { SelectChangeEvent } from '@mui/material/Select';
 import axios from 'axios';
 import { setMessageSnackBarState } from '../../globalRedux/features/snackbar/messageSnackBarSlice';
 import { useDispatch } from 'react-redux';
+import useSWRImmutable from 'swr/immutable';
+import useSWR from 'swr';
+import { useSearchParams } from 'next/navigation'
+import { useRouter } from 'next/router';
+import AvatarUser from '../AvatarUser';
+import Link from 'next/link';
 
-// import SortOptions from './SortOptions'; // Profile設定用コンポーネント
+
+const fetcherWithHeader = (url: string) => axios.get(url).then(res => res.data);
+const useVideosRequests = (url: string) => {
+    const { data, error } = useSWR( 
+      { url: url }, 
+      key => fetcherWithHeader(key.url), 
+      { revalidateOnFocus: false, revalidateOnReconnect: false}
+    );
+    return {
+        videoData: data?.data,
+        videoPage: data?.page,
+        videoCount: data?.count,
+        isLoading: !error && !data,
+        isError: error,
+    };
+}
+
 
 const VideosPage: React.FC = () => {
   const dispatch = useDispatch();
+  const router = useRouter();
+  
+  const serverURL = process.env.NEXT_PUBLIC_BACKEND_URL;
+  const url = `${serverURL}/api/videos`;
+  const searchParams = useSearchParams()
 
-  const [sort, setSort] = useState<string>('latest');
+  const urlWithParam = searchParams ? `${url}?${searchParams.toString()}` : url;
+
+  const pageParam = searchParams?.get('page') || 1
+  const sortParam = searchParams?.get('sort') || null
+  const tagsParam = searchParams?.getAll('tags') || []
+  const ratingParam = searchParams?.get('rating') || null
+
+  const { videoData, videoPage, videoCount, isLoading, isError } = useVideosRequests(urlWithParam);
+
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [tagList, setTagList] = useState<string[]>(['Tag1', 'Tag2', 'Tag3', 'Tag4', 'Tag5', 'Tag6', 'Tag7', 'Tag8']);
   const [searchTagUpperCaseList, setSearchTagUpperCaseList] = useState<string[]>(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
@@ -26,14 +61,6 @@ const VideosPage: React.FC = () => {
   const [modalTagListTotalCount, setModalTagListTotalCount] = useState<number>(0);
   const [currentSelecttedSearchText, setCurrentSelecttedSearchText] = useState<string>('');
   const [isModalDataLoading, setIsModalDataLoading] = useState<boolean>(false);
-
-  const handleSortChange = (sort: string) => {
-      setSort(sort);
-  };
-
-  // const handleTagChange = (event: SelectChangeEvent<string[]> | any) => {
-  //   setSelectedTags(event.target.value as string[]);
-  // };
 
   const handleTagSelect = (tag: string) => {
     const index = selectedTags.indexOf(tag);
@@ -58,7 +85,6 @@ const VideosPage: React.FC = () => {
     getTagListRequest(currentSelecttedSearchText, value);
   }
 
-  // タグリストを取得
   const getTagListRequest = async (text: string, page: number = 1) => {
     try {
       setIsModalDataLoading(true);
@@ -78,13 +104,98 @@ const VideosPage: React.FC = () => {
     }
   }
 
+  const handleVideosSortChange = (sort: string) => {
+    const newParams = new URLSearchParams();
+    if (selectedTags) selectedTags.forEach(tag => newParams.append('tags', tag));
+    if (ratingParam) newParams.append('rating', ratingParam);
+    if (pageParam) newParams.append('page', pageParam.toString());
+    newParams.append('sort', sort);
+    router.push(`/videos?${newParams.toString()}`);
+  }
+
+  const handleVideosPageChange = (event: React.ChangeEvent<unknown>, value: number) => {
+    const newParams = new URLSearchParams();
+    if (sortParam) newParams.append('sort', sortParam);
+    if (selectedTags) selectedTags.forEach(tag => newParams.append('tags', tag));
+    if (ratingParam) newParams.append('rating', ratingParam);
+    newParams.append('page', value.toString());
+    router.push(`/videos?${newParams.toString()}`);
+  }
+
+  const getDuration = (timestamp: number) => {
+    const now = Date.now();
+    const elapsed = now - timestamp;
+
+    if (elapsed < 60000) {
+      return Math.floor(elapsed / 1000) + '秒前';
+    } else if (elapsed < 3600000) {
+      return Math.floor(elapsed / 60000) + '分前';
+    } else if (elapsed < 86400000) {
+      return Math.floor(elapsed / 3600000) + '時間前';
+    } else if (elapsed < 2592000000) {
+      return Math.floor(elapsed / 86400000) + '日前';
+    } else if (elapsed < 31536000000) {
+      return Math.floor(elapsed / 2592000000) + 'ヶ月前';
+    } else {
+      return Math.floor(elapsed / 31536000000) + '年前';
+    }
+  };
+
   return (
     <Paper elevation={0} sx={{ padding: '15px' }}>
       <Box sx={{ display: 'flex' }}>
         <Grid container>
-          <Grid item xs={12} sm={12} md={9} lg={9}>
-            <Typography variant="h6">Videos</Typography>
-            <Box sx={{ flexGrow: 1 }}>
+          <Grid item xs={12} sm={12} md={9} lg={9} sx={{ paddingRight: '15px', paddingLeft: '15px' }}>
+            <Box sx={{ paddingRight: '15px', paddingLeft: '15px' }}>
+              <Typography variant="h5">Videos</Typography>
+            </Box>
+            <Box sx={{ flexGrow: 1, marginTop: '15px' }}>
+              { isError ? <Typography variant="body2">{`Error! Please try again.`}</Typography> :
+                isLoading ? <CircularProgress /> :
+                videoData?.length === 0 ? <Typography variant="body2">{`No videos found`}</Typography> :
+                <>
+                <Grid container>
+                  {videoData?.map((video: any) => (
+                    <Grid key={video.id} item xs={6} sm={4} md={3} lg={3}>
+                      <Box sx={{ paddingRight: '15px', paddingLeft: '15px', marginBottom: '15px' }}>
+                        <Box 
+                          component="img"
+                          sx={{ display: 'flex', justifyContent: 'center', cursor: 'pointer', width: '100%' }} 
+                          onClick={() => router.push(`/videos/${video.id}`)}  
+                          alt={video.title}
+                          src={video.thumbnail ? video.thumbnail : '/video_default_thumb.png'}
+                        />
+                        <Link href={`/users/${video.user.id}`} title={video.title} style={{ textDecoration: 'none', color: 'inherit' }}>
+                          <Box sx={{ marginTop: '5px', fontWeight: '700' }}>
+                            {video.title}
+                          </Box>
+                        </Link>
+                        <Box sx={{ marginTop: '5px' }}>
+                          <AvatarUser 
+                            user={video.user}
+                            useUsername={false}
+                            useLayerMarginTopBottom={false}
+                            smallAvatar={true}
+                            fontSize={0.7}
+                            contentCreatedAt={getDuration((new Date(video.created_at)).getTime())}
+                          />
+                        </Box>
+                      </Box>
+                    </Grid>
+                  ))}
+                </Grid>
+                <Box display={'flex'} justifyContent={'center'} sx={{ marginTop: '20px' }}>
+                  {videoCount <= 30 ? null :
+                    <Pagination 
+                      count={Math.ceil(videoCount / 30)} 
+                      defaultPage={1}
+                      page={videoPage}
+                      onChange={(e, page) => handleVideosPageChange(e, page)}
+                    />
+                  }
+                </Box>
+                </>
+              }
             </Box>
           </Grid>
           <Grid item xs={12} sm={12} md={3} lg={3}>
@@ -96,17 +207,17 @@ const VideosPage: React.FC = () => {
                         <Box sx={{ marginTop: '10px' }}>
                           <List>
                               <ListItem disablePadding>
-                                  <ListItemButton selected={sort === 'latest'} onClick={() => handleSortChange('latest')}>
+                                  <ListItemButton selected={sortParam === 'latest' || sortParam === null} onClick={() => handleVideosSortChange('latest')} >
                                       <ListItemText primary="Latest" />
                                   </ListItemButton>
                               </ListItem>
                               <ListItem disablePadding>
-                                  <ListItemButton selected={sort === 'oldest'} onClick={() => handleSortChange('oldest')}>
+                                  <ListItemButton selected={sortParam === 'oldest'} onClick={() => handleVideosSortChange('oldest')} >
                                       <ListItemText primary="Oldest" />
                                   </ListItemButton>
                               </ListItem>
                               <ListItem disablePadding>
-                                  <ListItemButton selected={sort === 'views'} onClick={() => handleSortChange('views')}>
+                                  <ListItemButton selected={sortParam === 'views'} onClick={() => handleVideosSortChange('views')} >
                                       <ListItemText primary="Views" />
                                   </ListItemButton>
                               </ListItem>
