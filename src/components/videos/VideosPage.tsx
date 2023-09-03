@@ -106,10 +106,10 @@ const VideosPage: React.FC = () => {
 
   const handleVideosSortChange = (sort: string) => {
     const newParams = new URLSearchParams();
+    newParams.append('sort', sort);
     if (selectedTags) selectedTags.forEach(tag => newParams.append('tags', tag));
     if (ratingParam) newParams.append('rating', ratingParam);
     if (pageParam) newParams.append('page', pageParam.toString());
-    newParams.append('sort', sort);
     router.push(`/videos?${newParams.toString()}`);
   }
 
@@ -219,6 +219,11 @@ const VideosPage: React.FC = () => {
                               <ListItem disablePadding>
                                   <ListItemButton selected={sortParam === 'views'} onClick={() => handleVideosSortChange('views')} >
                                       <ListItemText primary="Views" />
+                                  </ListItemButton>
+                              </ListItem>
+                              <ListItem disablePadding>
+                                  <ListItemButton selected={sortParam === 'likes'} onClick={() => handleVideosSortChange('likes')} >
+                                      <ListItemText primary="Likes" />
                                   </ListItemButton>
                               </ListItem>
                           </List>
