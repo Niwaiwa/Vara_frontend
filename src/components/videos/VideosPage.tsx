@@ -20,7 +20,10 @@ const useVideosRequests = (url: string) => {
     const { data, error } = useSWR( 
       { url: url }, 
       key => fetcherWithHeader(key.url), 
-      { revalidateOnFocus: false, revalidateOnReconnect: false}
+      { revalidateOnFocus: false, 
+        revalidateOnReconnect: false,
+        refreshInterval: 0,
+      }
     );
     return {
         videoData: data?.data,
@@ -44,7 +47,7 @@ const VideosPage: React.FC = () => {
 
   const pageParam = searchParams?.get('page') || 1
   const sortParam = searchParams?.get('sort') || null
-  const tagsParam = searchParams?.getAll('tags') || []
+  const tagsParam = searchParams?.getAll('tag') || []
   const ratingParam = searchParams?.get('rating') || null
 
   const { videoData, videoPage, videoCount, isLoading, isError } = useVideosRequests(urlWithParam);
@@ -66,9 +69,13 @@ const VideosPage: React.FC = () => {
     const index = selectedTags.indexOf(tag);
     if (index > -1) {
       setSelectedTags([...selectedTags.slice(0, index), ...selectedTags.slice(index + 1)]);
+      handleVideosTagChange();
       return;
     }
-    setSelectedTags([...selectedTags, tag]);
+    const newSelectedTags = [...selectedTags, tag];
+    setSelectedTags(newSelectedTags);
+    handleModalClose();
+    handleVideosTagChange(newSelectedTags);
   }
 
   const handleModalOpen = () => {
@@ -107,7 +114,7 @@ const VideosPage: React.FC = () => {
   const handleVideosSortChange = (sort: string) => {
     const newParams = new URLSearchParams();
     newParams.append('sort', sort);
-    if (selectedTags) selectedTags.forEach(tag => newParams.append('tags', tag));
+    if (selectedTags) selectedTags.forEach(tag => newParams.append('tag', tag));
     if (ratingParam) newParams.append('rating', ratingParam);
     if (pageParam) newParams.append('page', pageParam.toString());
     router.push(`/videos?${newParams.toString()}`);
@@ -116,9 +123,18 @@ const VideosPage: React.FC = () => {
   const handleVideosPageChange = (event: React.ChangeEvent<unknown>, value: number) => {
     const newParams = new URLSearchParams();
     if (sortParam) newParams.append('sort', sortParam);
-    if (selectedTags) selectedTags.forEach(tag => newParams.append('tags', tag));
+    if (selectedTags) selectedTags.forEach(tag => newParams.append('tag', tag));
     if (ratingParam) newParams.append('rating', ratingParam);
     newParams.append('page', value.toString());
+    router.push(`/videos?${newParams.toString()}`);
+  }
+
+  const handleVideosTagChange = (newTags: string[] = []) => {
+    const newParams = new URLSearchParams();
+    if (sortParam) newParams.append('sort', sortParam);
+    if (newTags) newTags.forEach(tag => newParams.append('tag', tag));
+    if (ratingParam) newParams.append('rating', ratingParam);
+    newParams.append('page', '1');
     router.push(`/videos?${newParams.toString()}`);
   }
 
