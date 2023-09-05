@@ -34,29 +34,45 @@ const useVideosRequests = (url: string) => {
     };
 }
 
+const useTagsRequests = (url: string) => {
+  const { data, error } = useSWR( 
+    { url: url }, 
+    key => fetcherWithHeader(key.url), 
+    { revalidateOnFocus: false, 
+      revalidateOnReconnect: false,
+      refreshInterval: 0,
+    }
+  );
+  return {
+      tagData: data?.data,
+      isLoading: !error && !data,
+      isError: error,
+  };
+}
+
 
 const VideosPage: React.FC = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   
   const serverURL = process.env.NEXT_PUBLIC_BACKEND_URL;
-  const url = `${serverURL}/api/videos`;
-  const searchParams = useSearchParams()
+  const videosUrl = `${serverURL}/api/videos`;
+  const tagsUrl = `${serverURL}/api/tags`;
+  const searchParams = useSearchParams();
 
-  const urlWithParam = searchParams ? `${url}?${searchParams.toString()}` : url;
+  const urlWithParam = searchParams ? `${videosUrl}?${searchParams.toString()}` : videosUrl;
 
-  const pageParam = searchParams?.get('page') || 1
+  const pageParam = searchParams?.get('page') || null
   const sortParam = searchParams?.get('sort') || null
   const tagsParam = searchParams?.getAll('tag') || []
   const ratingParam = searchParams?.get('rating') || null
 
   const { videoData, videoPage, videoCount, isLoading, isError } = useVideosRequests(urlWithParam);
+  const { tagData, isLoading: isTagLoading, isError: isTagError } = useTagsRequests(tagsUrl);
 
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const [tagList, setTagList] = useState<string[]>(['Tag1', 'Tag2', 'Tag3', 'Tag4', 'Tag5', 'Tag6', 'Tag7', 'Tag8']);
-  const [searchTagUpperCaseList, setSearchTagUpperCaseList] = useState<string[]>(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
-  'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '0', '1', '2', '3', '4', '5',
-  '6', '7', '8', '9']);
+  const searchTagUpperCaseList = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 
+  'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '0', '1', '2', '3', '4', '5',
+  '6', '7', '8', '9'];
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [modalTagList, setModalTagList] = useState<string[]>([]);
@@ -66,16 +82,15 @@ const VideosPage: React.FC = () => {
   const [isModalDataLoading, setIsModalDataLoading] = useState<boolean>(false);
 
   const handleTagSelect = (tag: string) => {
-    const index = selectedTags.indexOf(tag);
+    const index = tagsParam.indexOf(tag);
     if (index > -1) {
-      setSelectedTags([...selectedTags.slice(0, index), ...selectedTags.slice(index + 1)]);
-      handleVideosTagChange();
+      const newTags = [...tagsParam.slice(0, index), ...tagsParam.slice(index + 1)];
+      handleVideosTagChange(newTags);
       return;
     }
-    const newSelectedTags = [...selectedTags, tag];
-    setSelectedTags(newSelectedTags);
+    const newTags = [...tagsParam, tag];
     handleModalClose();
-    handleVideosTagChange(newSelectedTags);
+    handleVideosTagChange(newTags);
   }
 
   const handleModalOpen = () => {
@@ -114,19 +129,21 @@ const VideosPage: React.FC = () => {
   const handleVideosSortChange = (sort: string) => {
     const newParams = new URLSearchParams();
     newParams.append('sort', sort);
-    if (selectedTags) selectedTags.forEach(tag => newParams.append('tag', tag));
+    if (tagsParam) tagsParam.forEach(tag => newParams.append('tag', tag));
     if (ratingParam) newParams.append('rating', ratingParam);
     if (pageParam) newParams.append('page', pageParam.toString());
-    router.push(`/videos?${newParams.toString()}`);
+    const path = newParams.toString() === '' ? '/videos' : `/videos?${newParams.toString()}`;
+    router.push(path);
   }
 
   const handleVideosPageChange = (event: React.ChangeEvent<unknown>, value: number) => {
     const newParams = new URLSearchParams();
     if (sortParam) newParams.append('sort', sortParam);
-    if (selectedTags) selectedTags.forEach(tag => newParams.append('tag', tag));
+    if (tagsParam) tagsParam.forEach(tag => newParams.append('tag', tag));
     if (ratingParam) newParams.append('rating', ratingParam);
     newParams.append('page', value.toString());
-    router.push(`/videos?${newParams.toString()}`);
+    const path = newParams.toString() === '' ? '/videos' : `/videos?${newParams.toString()}`;
+    router.push(path);
   }
 
   const handleVideosTagChange = (newTags: string[] = []) => {
@@ -135,7 +152,8 @@ const VideosPage: React.FC = () => {
     if (newTags) newTags.forEach(tag => newParams.append('tag', tag));
     if (ratingParam) newParams.append('rating', ratingParam);
     if (pageParam) newParams.append('page', pageParam.toString());
-    router.push(`/videos?${newParams.toString()}`);
+    const path = newParams.toString() === '' ? '/videos' : `/videos?${newParams.toString()}`;
+    router.push(path);
   }
 
   const getDuration = (timestamp: number) => {
@@ -248,7 +266,7 @@ const VideosPage: React.FC = () => {
                     <Box sx={{ marginTop: '15px', marginBottom: '15px' }}>
                         <Typography variant="h6">Tags Filter</Typography>
                         <Box sx={{ marginTop: '10px' }}>
-                          {(selectedTags as string[]).map((tag) => (
+                          {(tagsParam as string[]).map((tag) => (
                             <Chip 
                               key={tag} 
                               label={tag} 
@@ -308,7 +326,7 @@ const VideosPage: React.FC = () => {
                                         key={tag.name}
                                         sx={{ 
                                           padding: '2px', 
-                                          fontWeight: selectedTags.includes(tag.name) ? 'bold' : 'normal', 
+                                          fontWeight: tagsParam.includes(tag.name) ? 'bold' : 'normal', 
                                           cursor: 'pointer' 
                                         }} 
                                         onClick={() => handleTagSelect(tag.name)}>
@@ -333,17 +351,19 @@ const VideosPage: React.FC = () => {
                         </Dialog>
                         {/* 常用タグ */}
                         <Box sx={{ marginTop: 1 }}>
-                            {tagList.slice(0, 8).map((tag) => (
-                              <Box 
-                                key={tag} 
-                                sx={{ 
-                                  padding: '2px', 
-                                  fontWeight: selectedTags.includes(tag) ? 'bold' : 'normal',
-                                  cursor: 'pointer' }} 
-                                onClick={() => handleTagSelect(tag)}
-                              >
-                                + {tag}
-                              </Box>
+                            {isTagError ? <Typography variant="body2">{`Error! Please try again.`}</Typography> :
+                              isTagLoading ? <CircularProgress /> :
+                              tagData?.slice(0, 8).map((tag) => (
+                                <Box 
+                                  key={tag.id} 
+                                  sx={{ 
+                                    padding: '2px', 
+                                    fontWeight: tagsParam.includes(tag.name) ? 'bold' : 'normal',
+                                    cursor: 'pointer' }} 
+                                  onClick={() => handleTagSelect(tag.name)}
+                                >
+                                  + {tag.name}
+                                </Box>
                             ))}
                         </Box>
                     </Box>
