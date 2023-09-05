@@ -134,7 +134,7 @@ const VideosPage: React.FC = () => {
     if (sortParam) newParams.append('sort', sortParam);
     if (newTags) newTags.forEach(tag => newParams.append('tag', tag));
     if (ratingParam) newParams.append('rating', ratingParam);
-    newParams.append('page', '1');
+    if (pageParam) newParams.append('page', pageParam.toString());
     router.push(`/videos?${newParams.toString()}`);
   }
 
