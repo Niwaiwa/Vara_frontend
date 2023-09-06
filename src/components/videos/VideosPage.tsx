@@ -199,7 +199,7 @@ const VideosPage: React.FC = () => {
                           alt={video.title}
                           src={video.thumbnail ? video.thumbnail : '/video_default_thumb.png'}
                         />
-                        <Link href={`/users/${video.user.id}`} title={video.title} style={{ textDecoration: 'none', color: 'inherit' }}>
+                        <Link href={`/videos/${video.id}`} title={video.title} style={{ textDecoration: 'none', color: 'inherit' }}>
                           <Box sx={{ marginTop: '5px', fontWeight: '700' }}>
                             {video.title}
                           </Box>
