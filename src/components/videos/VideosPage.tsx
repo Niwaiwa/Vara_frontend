@@ -13,6 +13,7 @@ import { useSearchParams } from 'next/navigation'
 import { useRouter } from 'next/router';
 import AvatarUser from '../AvatarUser';
 import Link from 'next/link';
+import { getDuration } from '../../helpers';
 
 
 const fetcherWithHeader = (url: string) => axios.get(url).then(res => res.data);
@@ -155,25 +156,6 @@ const VideosPage: React.FC = () => {
     const path = newParams.toString() === '' ? '/videos' : `/videos?${newParams.toString()}`;
     router.push(path);
   }
-
-  const getDuration = (timestamp: number) => {
-    const now = Date.now();
-    const elapsed = now - timestamp;
-
-    if (elapsed < 60000) {
-      return Math.floor(elapsed / 1000) + '秒前';
-    } else if (elapsed < 3600000) {
-      return Math.floor(elapsed / 60000) + '分前';
-    } else if (elapsed < 86400000) {
-      return Math.floor(elapsed / 3600000) + '時間前';
-    } else if (elapsed < 2592000000) {
-      return Math.floor(elapsed / 86400000) + '日前';
-    } else if (elapsed < 31536000000) {
-      return Math.floor(elapsed / 2592000000) + 'ヶ月前';
-    } else {
-      return Math.floor(elapsed / 31536000000) + '年前';
-    }
-  };
 
   return (
     <Paper elevation={0} sx={{ padding: '15px' }}>
