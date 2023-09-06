@@ -8,11 +8,11 @@ export default function HomePage() {
     <Container>
       <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" minHeight="60vh">
         <Typography variant="h3" gutterBottom>
-          Video site temp
+          Video site Portofolio
         </Typography>
-        <Link href="/portfolio" passHref>
+        <Link href="/videos" passHref>
             <Button variant="contained" color="primary">
-            Browse site
+            Browse videos
             </Button>
         </Link>
       </Box>
