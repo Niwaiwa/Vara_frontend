@@ -6,7 +6,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { SelectChangeEvent } from '@mui/material/Select';
 import axios from 'axios';
 import { setMessageSnackBarState } from '../../globalRedux/features/snackbar/messageSnackBarSlice';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import useSWRImmutable from 'swr/immutable';
 import useSWR from 'swr';
 import { useSearchParams } from 'next/navigation'
@@ -14,12 +14,15 @@ import { useRouter } from 'next/router';
 import AvatarUser from '../AvatarUser';
 import Link from 'next/link';
 import { getDuration } from '../../helpers';
+import { RootState } from '../../globalRedux/store';
 
 
 const fetcherWithHeader = (url: string) => axios.get(url).then(res => res.data);
-const useVideosRequests = (url: string) => {
+const useVideosRequests = (url: string, rating: string, searchParams: string) => {
+    const ratingUrl = `${url}?rating=${rating}`;
+    const newUrl = searchParams === '' ? ratingUrl : `${ratingUrl}&${searchParams}`;
     const { data, error } = useSWR( 
-      { url: url }, 
+      { url: newUrl }, 
       key => fetcherWithHeader(key.url), 
       { revalidateOnFocus: false, 
         revalidateOnReconnect: false,
@@ -60,15 +63,15 @@ const VideosPage: React.FC = () => {
   const videosUrl = `${serverURL}/api/videos`;
   const tagsUrl = `${serverURL}/api/tags`;
   const searchParams = useSearchParams();
-
-  const urlWithParam = searchParams ? `${videosUrl}?${searchParams.toString()}` : videosUrl;
-
+  
   const pageParam = searchParams?.get('page') || null
   const sortParam = searchParams?.get('sort') || null
   const tagsParam = searchParams?.getAll('tag') || []
-  const ratingParam = searchParams?.get('rating') || null
+  const ratingParam = useSelector((state: RootState) => state.rating.rating);
 
-  const { videoData, videoPage, videoCount, isLoading, isError } = useVideosRequests(urlWithParam);
+  const newSearchParams = new URLSearchParams(searchParams?.toString() || '');
+
+  const { videoData, videoPage, videoCount, isLoading, isError } = useVideosRequests(videosUrl, ratingParam, newSearchParams.toString());
   const { tagData, isLoading: isTagLoading, isError: isTagError } = useTagsRequests(tagsUrl);
 
   const searchTagUpperCaseList = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 
@@ -131,8 +134,7 @@ const VideosPage: React.FC = () => {
     const newParams = new URLSearchParams();
     newParams.append('sort', sort);
     if (tagsParam) tagsParam.forEach(tag => newParams.append('tag', tag));
-    if (ratingParam) newParams.append('rating', ratingParam);
-    if (pageParam) newParams.append('page', pageParam.toString());
+    newParams.append('page', '1');
     const path = newParams.toString() === '' ? '/videos' : `/videos?${newParams.toString()}`;
     router.push(path);
   }
@@ -141,7 +143,6 @@ const VideosPage: React.FC = () => {
     const newParams = new URLSearchParams();
     if (sortParam) newParams.append('sort', sortParam);
     if (tagsParam) tagsParam.forEach(tag => newParams.append('tag', tag));
-    if (ratingParam) newParams.append('rating', ratingParam);
     newParams.append('page', value.toString());
     const path = newParams.toString() === '' ? '/videos' : `/videos?${newParams.toString()}`;
     router.push(path);
@@ -151,8 +152,7 @@ const VideosPage: React.FC = () => {
     const newParams = new URLSearchParams();
     if (sortParam) newParams.append('sort', sortParam);
     if (newTags) newTags.forEach(tag => newParams.append('tag', tag));
-    if (ratingParam) newParams.append('rating', ratingParam);
-    if (pageParam) newParams.append('page', pageParam.toString());
+    newParams.append('page', '1');
     const path = newParams.toString() === '' ? '/videos' : `/videos?${newParams.toString()}`;
     router.push(path);
   }

@@ -8,7 +8,11 @@ const enum Rating {
     E = 'E',
 }
 
-const initialState = {
+interface RatingState {
+  rating: string;
+}
+
+const initialState: RatingState = {
   rating: Rating.All,
 };
 
