@@ -59,6 +59,7 @@ const VideosPage: React.FC = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   
+  const videoThumbnailsPath = 'media/videos/thumbnails/';
   const serverURL = process.env.NEXT_PUBLIC_BACKEND_URL;
   const videosUrl = `${serverURL}/api/videos`;
   const tagsUrl = `${serverURL}/api/tags`;
@@ -174,13 +175,16 @@ const VideosPage: React.FC = () => {
                   {videoData?.map((video: any) => (
                     <Grid key={video.id} item xs={6} sm={4} md={3} lg={3}>
                       <Box sx={{ paddingRight: '15px', paddingLeft: '15px', marginBottom: '15px' }}>
-                        <Box 
-                          component="img"
-                          sx={{ display: 'flex', justifyContent: 'center', cursor: 'pointer', width: '100%' }} 
-                          onClick={() => router.push(`/videos/${video.id}`)}  
-                          alt={video.title}
-                          src={video.thumbnail ? video.thumbnail : '/video_default_thumb.png'}
-                        />
+                        <Link href={`/videos/${video.id}`} title={video.title} style={{ textDecoration: 'none', color: 'inherit' }}>
+                          <Box 
+                            component="img"
+                            sx={{ display: 'flex', justifyContent: 'center', cursor: 'pointer', width: '100%' }} 
+                            alt={video.title}
+                            src={`${serverURL}/${videoThumbnailsPath}${video.id}/thumbnails_0.jpg`}
+                            onError={(e) => e.currentTarget.src = '/video_default_thumb.png'}
+                          />
+                          {/* {handleVideoThumbnails(video.id, video.title)} */}
+                        </Link>
                         <Link href={`/videos/${video.id}`} title={video.title} style={{ textDecoration: 'none', color: 'inherit' }}>
                           <Box sx={{ marginTop: '5px', fontWeight: '700' }}>
                             {video.title}
