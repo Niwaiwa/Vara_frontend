@@ -3,7 +3,7 @@ import axios from 'axios';
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Box, Container, Paper, Typography, List, ListItem, ListItemButton, ListItemIcon, ListItemText,
-    Grid, } from '@mui/material';
+    Grid, Button} from '@mui/material';
 import AvatarComponent from '../../components/AvatarComponent';
 import ContainerFluid from '../../components/ContainerFluid';
 import { RootState } from '@/globalRedux/store';
@@ -37,6 +37,7 @@ const ProfilePage: React.FC<ProfileProps> = (props) => {
     const username = props.username;
 
     const serverURL = process.env.NEXT_PUBLIC_BACKEND_URL;
+    const currentUser = useSelector((state: RootState) => state.auth.userInfo);
     const token: string | null = useSelector((state: RootState) => state.auth.token);
 
     const { profile, isLoading, isError } = useProfile(token, username);
@@ -95,17 +96,59 @@ const ProfilePage: React.FC<ProfileProps> = (props) => {
                     <Box sx={{
                         width: '100%',
                         maxWidth: '360px',
-                        paddingTop: '15px',
                         justifyContent: 'center',
                         display: 'flex',
                         alignItems: 'center!important',
                     }}>
-                        {/* <Typography variant="h6">0</Typography>
-                        <Typography variant="subtitle1">Following</Typography>
-                        <Typography variant="h6">0</Typography>
-                        <Typography variant="subtitle1">Followers</Typography>
-                        <Typography variant="h6">0</Typography>
-                        <Typography variant="subtitle1">Videos</Typography> */}
+                        { currentUser?.username !== username && 
+                            <>
+                                <Button 
+                                    variant="outlined"
+                                    {...(user?.is_following ? { disabled: true } : {})}
+                                    sx={{ 
+                                        whiteSpace: 'nowrap',
+                                        width: '100%',
+                                    }}
+                                >
+                                    {user?.is_following ? 'Following' : 'Follow'}
+                                </Button>
+                                <Box sx={{ marginLeft: '15px' }}>
+                                    { user?.is_friend_request ?
+                                        <Button 
+                                            variant="outlined"
+                                            sx={{ 
+                                                whiteSpace: 'nowrap',
+                                                width: '100%',
+                                            }}
+                                        >
+                                            Cancel friend request
+                                        </Button>
+                                    :
+                                        <Button 
+                                            variant="outlined"
+                                            {...(user?.is_friend ? { disabled: true } : {})}
+                                            sx={{ 
+                                                whiteSpace: 'nowrap',
+                                                width: '100%',
+                                            }}
+                                        >
+                                            {user?.is_friend ? 'Friends' : 'Add Friend'}
+                                        </Button>
+                                    }
+                                </Box>
+                                <Box sx={{ marginLeft: '15px', marginRight: '15px' }}>
+                                    <Button 
+                                        variant="outlined"
+                                        sx={{ 
+                                            whiteSpace: 'nowrap',
+                                            width: '100%',
+                                        }}
+                                    >
+                                        Message
+                                    </Button>
+                                </Box>
+                            </>
+                        }
                     </Box>
                 </Box>
             </Paper>
