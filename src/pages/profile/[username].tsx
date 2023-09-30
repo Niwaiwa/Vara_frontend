@@ -20,7 +20,8 @@ const useProfile = (token: string | null, username: string) => {
     const serverURL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
     const url = `${serverURL}/api/profile/${username}`;
-    const { data, error } = useSWR( !username ? null : url, token ? fetcherWithHeader : fetcher );
+    const key = { url: url, token: token ? token : ''}
+    const { data, error } = useSWR(key, key => token ? fetcherWithHeader(key.url, key.token) : fetcher(key.url), { revalidateOnMount: true });
     return {
         profile: data,
         isLoading: !error && !data,
