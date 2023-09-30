@@ -108,17 +108,19 @@ const ProfilePage: React.FC<ProfileProps> = (props) => {
                                     sx={{ 
                                         whiteSpace: 'nowrap',
                                         width: '100%',
+                                        textTransform: 'none',
                                     }}
                                 >
                                     {user?.is_following ? 'Following' : 'Follow'}
                                 </Button>
-                                <Box sx={{ marginLeft: '15px' }}>
+                                <Box sx={{ marginLeft: '10px' }}>
                                     { user?.is_friend_request ?
                                         <Button 
                                             variant="outlined"
                                             sx={{ 
                                                 whiteSpace: 'nowrap',
                                                 width: '100%',
+                                                textTransform: 'none',
                                             }}
                                         >
                                             Cancel friend request
@@ -130,18 +132,20 @@ const ProfilePage: React.FC<ProfileProps> = (props) => {
                                             sx={{ 
                                                 whiteSpace: 'nowrap',
                                                 width: '100%',
+                                                textTransform: 'none',
                                             }}
                                         >
                                             {user?.is_friend ? 'Friends' : 'Add Friend'}
                                         </Button>
                                     }
                                 </Box>
-                                <Box sx={{ marginLeft: '15px', marginRight: '15px' }}>
+                                <Box sx={{ marginLeft: '10px', marginRight: '10px' }}>
                                     <Button 
                                         variant="outlined"
                                         sx={{ 
                                             whiteSpace: 'nowrap',
                                             width: '100%',
+                                            textTransform: 'none',
                                         }}
                                     >
                                         Message
