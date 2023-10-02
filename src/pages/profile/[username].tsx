@@ -6,6 +6,7 @@ import { Box, Container, Paper, Typography, List, ListItem, ListItemButton, List
     Grid, Button} from '@mui/material';
 import AvatarComponent from '../../components/AvatarComponent';
 import ContainerFluid from '../../components/ContainerFluid';
+import ProfileRelation from '../../components/ProfileRelation';
 import { RootState } from '@/globalRedux/store';
 import ProfileIcon from '@mui/icons-material/AccountCircle';
 import VideoIcon from '@mui/icons-material/VideoLibrary';
@@ -100,59 +101,7 @@ const ProfilePage: React.FC<ProfileProps> = (props) => {
                         display: 'flex',
                         alignItems: 'center!important',
                     }}>
-                        { currentUser?.username !== username && 
-                            <>
-                                <Button 
-                                    variant="outlined"
-                                    {...(user?.is_following ? { disabled: true } : {})}
-                                    sx={{ 
-                                        whiteSpace: 'nowrap',
-                                        width: '100%',
-                                        textTransform: 'none',
-                                    }}
-                                >
-                                    {user?.is_following ? 'Following' : 'Follow'}
-                                </Button>
-                                <Box sx={{ marginLeft: '10px' }}>
-                                    { user?.is_friend_request ?
-                                        <Button 
-                                            variant="outlined"
-                                            sx={{ 
-                                                whiteSpace: 'nowrap',
-                                                width: '100%',
-                                                textTransform: 'none',
-                                            }}
-                                        >
-                                            Cancel friend request
-                                        </Button>
-                                    :
-                                        <Button 
-                                            variant="outlined"
-                                            {...(user?.is_friend ? { disabled: true } : {})}
-                                            sx={{ 
-                                                whiteSpace: 'nowrap',
-                                                width: '100%',
-                                                textTransform: 'none',
-                                            }}
-                                        >
-                                            {user?.is_friend ? 'Friends' : 'Add Friend'}
-                                        </Button>
-                                    }
-                                </Box>
-                                <Box sx={{ marginLeft: '10px', marginRight: '10px' }}>
-                                    <Button 
-                                        variant="outlined"
-                                        sx={{ 
-                                            whiteSpace: 'nowrap',
-                                            width: '100%',
-                                            textTransform: 'none',
-                                        }}
-                                    >
-                                        Message
-                                    </Button>
-                                </Box>
-                            </>
-                        }
+                        <ProfileRelation currentUser={currentUser} username={username} user={user} />
                     </Box>
                 </Box>
             </Paper>
