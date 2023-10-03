@@ -22,7 +22,11 @@ const useProfile = (token: string | null, username: string) => {
 
     const url = `${serverURL}/api/profile/${username}`;
     const key = { url: url, token: token ? token : ''}
-    const { data, error } = useSWR(key, key => token ? fetcherWithHeader(key.url, key.token) : fetcher(key.url), { revalidateOnMount: true });
+    const { data, error } = useSWR(
+        !username ? null : key,
+        key => token ? fetcherWithHeader(key.url, key.token) : fetcher(key.url),
+        { revalidateOnMount: true }
+    );
     return {
         profile: data,
         isLoading: !error && !data,
@@ -95,7 +99,7 @@ const ProfilePage: React.FC<ProfileProps> = (props) => {
                         <Typography variant="subtitle1">@{user?.username}</Typography>
                     </Box>
                     <Box sx={{
-                        width: '100%',
+                        // width: '100%',
                         maxWidth: '360px',
                         justifyContent: 'center',
                         display: 'flex',
