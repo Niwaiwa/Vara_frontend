@@ -1,75 +1,207 @@
 import React, { useState } from 'react';
 import { Box, Button } from '@mui/material';
+import { useDispatch } from 'react-redux';
+import { setMessageSnackBarState } from '../globalRedux/features/snackbar/messageSnackBarSlice';
+import axios from 'axios';
 
 
 interface ProfileRelationProps {
   currentUser?: any;
-  username?: string;
+  username?: string | null;
   user?: any;
+  token?: string | null;
 }
 
 
-const ProfileRelation: React.FC<ProfileRelationProps> = ({ currentUser, username, user }) => {
+const ProfileRelation: React.FC<ProfileRelationProps> = ({ currentUser, username, user, token }) => {
 
+  const serverURL = process.env.NEXT_PUBLIC_BACKEND_URL;
+
+  const [userState, setUserState] = useState<any>(user);
   const [isDisplayCancelFriendRequestButton, setIsDisplayCancelFriendRequestButton] = useState<boolean>(false);
-  const [isDisplayUnfollowButton, setIsDisplayUnfollowButton] = useState<boolean>(false);
   const [isDisplayUnFriendButton, setIsDisplayUnFriendButton] = useState<boolean>(false);
+  const [isDisplayUnfollowButton, setIsDisplayUnfollowButton] = useState<boolean>(false);
 
-  const handleDisplayCancelFriendRequestButton = () => {
-    setIsDisplayCancelFriendRequestButton(!isDisplayCancelFriendRequestButton);
+  const dispatch = useDispatch();
+
+  const handleDisplayCancelFriendRequestButtonOnMouseOver = () => {
+    setIsDisplayCancelFriendRequestButton(true);
   };
 
-  const handleDisplayUnFriendButton = () => {
-      setIsDisplayUnFriendButton(!isDisplayUnFriendButton);
+  const handleDisplayCancelFriendRequestButtonOnMouseOut = () => {
+    setIsDisplayCancelFriendRequestButton(false);
   };
 
-  const handleDisplayUnfollowButton = () => {
-      setIsDisplayUnfollowButton(!isDisplayUnfollowButton);
+  const handleDisplayUnFriendButtonOnMouseOver = () => {
+    setIsDisplayUnFriendButton(true);
   };
 
-  const handleCancelFriendRequest = () => {
-      console.log('cancel friend request');
+  const handleDisplayUnFriendButtonOnMouseOut = () => {
+    setIsDisplayUnFriendButton(false);
   };
 
-  const handleUnFriend = () => {
-      console.log('unfriend');
+  const handleDisplayUnfollowButtonOnMouseOver = () => {
+    setIsDisplayUnfollowButton(true);
   };
 
-  const handleAddFriend = () => {
-      console.log('add friend');
+  const handleDisplayUnfollowButtonOnMouseOut = () => {
+    setIsDisplayUnfollowButton(false);
   };
 
-  const handleFollowUser = () => {
-      console.log('follow user');
+  const handleCancelFriendRequest = async () => {
+    try{
+      if (!currentUser) return;
+      const currentUserId = currentUser.id;
+      const userId = userState.id;
+
+      const url = `${serverURL}/api/users/${currentUserId}/friends/requests/cancel`;
+      const requestData = {
+        friend_user_id: userId,
+      }
+
+      const header = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      }
+
+      const response = await axios.post(url, requestData, { headers: header });
+      handleGetProfileUser(header);
+      dispatch(setMessageSnackBarState({ message: 'Cancel friend request success' }));
+    } catch (error) {
+      console.log(error);
+      dispatch(setMessageSnackBarState({ message: 'Cancel friend request failed' }));
+    }
   };
 
-  const handleUnFollowUser = () => {
-      console.log('unfollow user');
+  const handleUnFriend = async () => {
+    try{
+      if (!currentUser) return;
+      const currentUserId = currentUser.id;
+      const userId = userState.id;
+
+      const url = `${serverURL}/api/users/${currentUserId}/friends`;
+      const requestData = {
+        friend_user_id: userId,
+      }
+
+      const header = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      }
+
+      const response = await axios.delete(url, { data: requestData, headers: header });
+      handleGetProfileUser(header);
+      dispatch(setMessageSnackBarState({ message: 'Unfriend success' }));
+    } catch (error) {
+      console.log(error);
+      dispatch(setMessageSnackBarState({ message: 'Unfriend failed' }));
+    }
   };
+
+  const handleAddFriend = async () => {
+    try{
+      if (!currentUser) return;
+      const currentUserId = currentUser.id;
+      const userId = userState.id;
+
+      const url = `${serverURL}/api/users/${currentUserId}/friends`;
+      const requestData = {
+        friend_user_id: userId,
+      }
+
+      const header = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      }
+
+      const response = await axios.post(url, requestData, { headers: header });
+      handleGetProfileUser(header);
+      dispatch(setMessageSnackBarState({ message: 'Add friend success' }));
+    } catch (error) {
+      console.log(error);
+      dispatch(setMessageSnackBarState({ message: 'Add friend failed' }));
+    }
+  };
+
+  const handleFollowUser = async () => {
+    try{
+      if (!currentUser) return;
+      const userId = userState.id;
+
+      const url = `${serverURL}/api/users/following`;
+      const requestData = {
+        following_user_id: userId,
+      }
+
+      const header = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      }
+
+      const response = await axios.post(url, requestData, { headers: header });
+      handleGetProfileUser(header);
+      dispatch(setMessageSnackBarState({ message: 'Follow user success' }));
+    } catch (error) {
+      console.log(error);
+      dispatch(setMessageSnackBarState({ message: 'Follow user failed' }));
+    }
+  };
+
+  const handleUnFollowUser = async () => {
+    try{
+      if (!currentUser) return;
+      const userId = userState.id;
+
+      const url = `${serverURL}/api/users/following`;
+      const requestData = {
+        following_user_id: userId,
+      }
+
+      const header = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      }
+
+      const response = await axios.delete(url, { data: requestData, headers: header });
+      handleGetProfileUser(header);
+      dispatch(setMessageSnackBarState({ message: 'Unfollow user success' }));
+    } catch (error) {
+      console.log(error);
+      dispatch(setMessageSnackBarState({ message: 'Unfollow user failed' }));
+    }
+  };
+
+  const handleGetProfileUser = async (header: any) => {
+    try {
+      const url = `${serverURL}/api/profile/${username}`;
+      const response = await axios.get(url, { headers: header });
+      setUserState(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   return (
       <>
         { currentUser?.username !== username && 
           <>
-              { user?.is_following ?
+              { userState?.is_following ?
                   <Button 
                       variant="outlined"
-                      // {...(user?.is_following ? { disabled: true } : {})}
                       sx={{ 
                           whiteSpace: 'nowrap',
                           width: '100%',
                           textTransform: 'none',
                       }}
                       onClick={handleUnFollowUser}
-                      onMouseOver={handleDisplayUnfollowButton}
-                      onMouseOut={handleDisplayUnfollowButton}
+                      onMouseOver={handleDisplayUnfollowButtonOnMouseOver}
+                      onMouseOut={handleDisplayUnfollowButtonOnMouseOut}
                   >
                       {isDisplayUnfollowButton ? 'Unfollow' : 'Following'}
                   </Button>
               :
                   <Button 
                       variant="outlined"
-                      // {...(user?.is_following ? { disabled: true } : {})}
                       sx={{ 
                           whiteSpace: 'nowrap',
                           width: '100%',
@@ -82,7 +214,7 @@ const ProfileRelation: React.FC<ProfileRelationProps> = ({ currentUser, username
               }
               
               <Box sx={{ marginLeft: '10px' }}>
-                  { user?.is_friend_request ?
+                  { userState?.is_friend_request ?
                       <Button 
                           variant="outlined"
                           sx={{ 
@@ -91,23 +223,22 @@ const ProfileRelation: React.FC<ProfileRelationProps> = ({ currentUser, username
                               textTransform: 'none',
                           }}
                           onClick={handleCancelFriendRequest}
-                          onMouseOver={handleDisplayCancelFriendRequestButton}
-                          onMouseOut={handleDisplayCancelFriendRequestButton}
+                          onMouseOver={handleDisplayCancelFriendRequestButtonOnMouseOver}
+                          onMouseOut={handleDisplayCancelFriendRequestButtonOnMouseOut}
                       >
                           {isDisplayCancelFriendRequestButton ? 'Cancel friend request' : 'Friend requesting'}
                       </Button>
-                  : user?.is_friend ?
+                  : userState?.is_friend ?
                       <Button 
                           variant="outlined"
-                          // {...(user?.is_friend ? { disabled: true } : {})}
                           sx={{ 
                               whiteSpace: 'nowrap',
                               width: '100%',
                               textTransform: 'none',
                           }}
                           onClick={isDisplayUnFriendButton ? handleUnFriend : () => {}}
-                          onMouseOver={handleDisplayUnFriendButton}
-                          onMouseOut={handleDisplayUnFriendButton}
+                          onMouseOver={handleDisplayUnFriendButtonOnMouseOver}
+                          onMouseOut={handleDisplayUnFriendButtonOnMouseOut}
                       >
                           {isDisplayUnFriendButton ? 'Unfriend' : 'Friend'}
                       </Button>
@@ -125,7 +256,7 @@ const ProfileRelation: React.FC<ProfileRelationProps> = ({ currentUser, username
                       </Button>
                   }
               </Box>
-              <Box sx={{ marginLeft: '10px', marginRight: '10px' }}>
+              {/* <Box sx={{ marginLeft: '10px', marginRight: '10px' }}>
                   <Button 
                       variant="outlined"
                       sx={{ 
@@ -136,7 +267,7 @@ const ProfileRelation: React.FC<ProfileRelationProps> = ({ currentUser, username
                   >
                       Message
                   </Button>
-              </Box>
+              </Box> */}
           </>
         }
       </>

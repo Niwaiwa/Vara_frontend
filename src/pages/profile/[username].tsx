@@ -105,7 +105,7 @@ const ProfilePage: React.FC<ProfileProps> = (props) => {
                         display: 'flex',
                         alignItems: 'center!important',
                     }}>
-                        <ProfileRelation currentUser={currentUser} username={username} user={user} />
+                        <ProfileRelation currentUser={currentUser} username={username} user={user} token={token} />
                     </Box>
                 </Box>
             </Paper>
