@@ -213,7 +213,7 @@ const ProfileRelation: React.FC<ProfileRelationProps> = ({ currentUser, username
                   </Button>
               }
               
-              <Box sx={{ marginLeft: '10px' }}>
+              <Box sx={{ marginLeft: '10px', marginRight: { xs: '10px', md: '0px' } }}>
                   { userState?.is_friend_request ?
                       <Button 
                           variant="outlined"
@@ -256,7 +256,7 @@ const ProfileRelation: React.FC<ProfileRelationProps> = ({ currentUser, username
                       </Button>
                   }
               </Box>
-              {/* <Box sx={{ marginLeft: '10px', marginRight: '10px' }}>
+              <Box sx={{ marginLeft: { xs: '0px', md: '10px' }, marginRight: { xs: '0px', md: '10px' } }}>
                   <Button 
                       variant="outlined"
                       sx={{ 
@@ -267,7 +267,7 @@ const ProfileRelation: React.FC<ProfileRelationProps> = ({ currentUser, username
                   >
                       Message
                   </Button>
-              </Box> */}
+              </Box>
           </>
         }
       </>

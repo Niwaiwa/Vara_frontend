@@ -72,17 +72,19 @@ const ProfilePage: React.FC<ProfileProps> = (props) => {
                     backgroundColor: '#f0f0f0', 
                     display: 'flex',
                     flexDirection: { xs: 'column', sm: 'row' },
+                    justifyContent: { xs: 'center', sm: 'space-between' },
                     alignItems: { xs: 'center', sm: 'none' },
-                    position: 'relative',
+                    position: { xs: 'none', sm: 'relative'},
                     paddingLeft: '15px',
                     paddingRight: '15px',
                     // borderRadius: '25px',
+                    textAlign: { xs: 'center', sm: 'initial' },
                 }}>
                     <AvatarComponent useSize="large" avatar={avatar} />
                     <Box sx={{ 
                         marginTop: '15px',
                         marginBottom: '15px',
-                        marginLeft: '15px',
+                        marginLeft: { xs: '0px', sm: '15px' },
                         paddingTop: 0,
                         paddingBottom: 0,
                         flex: 1,
@@ -105,6 +107,7 @@ const ProfilePage: React.FC<ProfileProps> = (props) => {
                         justifyContent: 'center',
                         display: 'flex',
                         alignItems: 'center!important',
+                        marginBottom: { xs: '15px', sm: '0px'}
                     }}>
                         <ProfileRelation currentUser={currentUser} username={username} user={user} token={token} />
                     </Box>
@@ -119,14 +122,14 @@ const ProfilePage: React.FC<ProfileProps> = (props) => {
                         paddingLeft: '15px',
                         paddingRight: '15px',
                 }}>
-                    <Grid item sm={12} md={8} lg={9}>
+                    <Grid item xs={12} sm={12} md={8} lg={9}>
                         <Box sx={{ marginTop: '15px' }}>
                             <Box 
                                 sx={{
                                     display: 'flex',
                                     flexWrap: 'wrap',
-                                    marginRight: '-15px',
-                                    marginLeft: '-15px',
+                                    marginRight: { xs: '0px', sm: '-15px' },
+                                    marginLeft: { xs: '0px', sm: '-15px' },
                                 }}
                             >
                                 <Grid item sm={12} sx={{ textAlign: 'center', paddingTop: '8px', fontStyle: 'italic' }}>
@@ -135,7 +138,7 @@ const ProfilePage: React.FC<ProfileProps> = (props) => {
                             </Box>
                         </Box>
                     </Grid>
-                    <Grid item sm={12} md={4} lg={3}>
+                    <Grid item xs={12} sm={12} md={4} lg={3}>
                         <Box sx={{
                             marginTop: '30px',
                             marginBottom: '30px',

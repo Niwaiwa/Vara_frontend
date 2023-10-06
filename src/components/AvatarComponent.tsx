@@ -22,16 +22,12 @@ const AvatarComponent: React.FC<AvatarProps> = (props) => {
       marginRight: { xs: '0px', sm: '15px' },
     }}>
       <div style={{
-        minWidth: '200px',
-        marginTop: 0,
-        marginBottom: '15px',
-        marginRight: '15px',
       }}>
         <Avatar 
           alt="Avatar" 
           src={avatar}
           sx={{ 
-            position: 'absolute',
+            position: { xs: 'none', sm: 'absolute'},
             width: useSize === 'large' ? '200px' : '32px', 
             height: useSize === 'large' ? '200px' : '32px',
             bottom: useSize === 'large' ? '15px' : '0px',
