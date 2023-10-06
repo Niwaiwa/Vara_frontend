@@ -17,9 +17,9 @@ const AvatarComponent: React.FC<AvatarProps> = (props) => {
       maxWidth: '250px',
       minWidth: '200px',
       zIndex: 10,
-      marginTop: 0,
-      marginBottom: '15px',
-      marginRight: '15px',
+      marginTop: { xs: '-100px', sm: '0px' },
+      marginBottom: { xs: '0px', sm: '15px' },
+      marginRight: { xs: '0px', sm: '15px' },
     }}>
       <div style={{
         minWidth: '200px',

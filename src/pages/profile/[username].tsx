@@ -71,7 +71,8 @@ const ProfilePage: React.FC<ProfileProps> = (props) => {
                 <Box sx={{ 
                     backgroundColor: '#f0f0f0', 
                     display: 'flex',
-                    flexDirection: 'row',
+                    flexDirection: { xs: 'column', sm: 'row' },
+                    alignItems: { xs: 'center', sm: 'none' },
                     position: 'relative',
                     paddingLeft: '15px',
                     paddingRight: '15px',
