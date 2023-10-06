@@ -37,7 +37,9 @@ export default function MyApp(props: MyAppProps) {
             <Section>
               <Component {...pageProps} />  
             </Section>
-            <Footer />
+            <Section>
+              <Footer />
+            </Section>
             <MessageSnackBar />
           </ThemeProvider>
         </CacheProvider>
