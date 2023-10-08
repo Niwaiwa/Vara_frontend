@@ -7,6 +7,7 @@ import { Box, Container, Paper, Typography, List, ListItem, ListItemButton, List
 import AvatarComponent from '../../components/AvatarComponent';
 import ContainerFluid from '../../components/ContainerFluid';
 import ProfileRelation from '../../components/ProfileRelation';
+import FollowInfo from '@/components/FollowInfo';
 import { RootState } from '@/globalRedux/store';
 import ProfileIcon from '@mui/icons-material/AccountCircle';
 import VideoIcon from '@mui/icons-material/VideoLibrary';
@@ -171,6 +172,16 @@ const ProfilePage: React.FC<ProfileProps> = (props) => {
                                     </ListItemButton>
                                 </ListItem>
                             </List>
+                        </Box>
+                        <Box sx={{
+                            marginTop: '30px',
+                            marginBottom: '30px',
+                            borderRadius: '5px',
+                            overflow: 'hidden',
+                            boxShadow: '0 2px 5px rgba(0,0,0,.1)',
+                            backgroundColor: '#f0f0f0',
+                        }}>
+                            <FollowInfo userId={user?.id} username={username} />
                         </Box>
                     </Grid>
                 </Grid>
