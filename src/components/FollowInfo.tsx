@@ -49,7 +49,7 @@ const useFollowings = (userId: string | null) => {
 
 interface FollowInfoProps {
   userId?: string;
-  username?: string;
+  username?: string | null;
 }
 
 

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import axios from 'axios';
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
@@ -18,7 +19,7 @@ import useSWR from 'swr';
 
 const fetcher = (url: string) => axios.get(url).then(res => res.data);
 const fetcherWithHeader = (url: string, token: string) => axios.get(url, { headers: { 'Authorization': `Bearer ${token}` } }).then(res => res.data);
-const useProfile = (token: string | null, username: string) => {
+const useProfile = (token: string | null, username: string | null) => {
     const serverURL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
     const url = `${serverURL}/api/profile/${username}`;
@@ -40,11 +41,18 @@ interface ProfileProps {
 }
 
 const ProfilePage: React.FC<ProfileProps> = (props) => {
-    const username = props.username;
-
-    const serverURL = process.env.NEXT_PUBLIC_BACKEND_URL;
+    // const username = props.username;
     const currentUser = useSelector((state: RootState) => state.auth.userInfo);
     const token: string | null = useSelector((state: RootState) => state.auth.token);
+
+    const router = useRouter();
+    console.log(router.query.username);
+
+    const pathParams: string[] | null = Array.isArray(router.query.username) ? router.query.username : null;
+    const username: string | null = pathParams ? pathParams[0] : null;
+    const secondParam: string | null = pathParams ? pathParams[1] : null;
+    console.log(username, secondParam);
+    const serverURL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
     const { profile, isLoading, isError } = useProfile(token, username);
     if (isLoading) {
@@ -190,23 +198,23 @@ const ProfilePage: React.FC<ProfileProps> = (props) => {
     );
 };
 
-export const getStaticProps: GetStaticProps = async (context) => {
-    const username = context.params?.username;
-    return {
-        props: {
-            username,
-        }
-    }
-}
+// export const getStaticProps: GetStaticProps = async (context) => {
+//     const username = context.params?.username;
+//     return {
+//         props: {
+//             username,
+//         }
+//     }
+// }
 
-export const getStaticPaths: GetStaticPaths = async () => {
-    return {
-        paths: [
-            { params: { username: 'test' } },
-        ],
-        fallback: true,
-    }
-}
+// export const getStaticPaths: GetStaticPaths = async () => {
+//     return {
+//         paths: [
+//             { params: { username: 'test' } },
+//         ],
+//         fallback: true,
+//     }
+// }
 
 
 export default ProfilePage;
