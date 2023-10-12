@@ -9,6 +9,8 @@ import AvatarComponent from '../../components/AvatarComponent';
 import ContainerFluid from '../../components/ContainerFluid';
 import ProfileRelation from '../../components/ProfileRelation';
 import FollowInfo from '@/components/FollowInfo';
+import Followers from '@/components/Followers';
+import Followings from '@/components/Followings';
 import { RootState } from '@/globalRedux/store';
 import ProfileIcon from '@mui/icons-material/AccountCircle';
 import VideoIcon from '@mui/icons-material/VideoLibrary';
@@ -46,12 +48,10 @@ const ProfilePage: React.FC<ProfileProps> = (props) => {
     const token: string | null = useSelector((state: RootState) => state.auth.token);
 
     const router = useRouter();
-    console.log(router.query.username);
 
     const pathParams: string[] | null = Array.isArray(router.query.username) ? router.query.username : null;
     const username: string | null = pathParams ? pathParams[0] : null;
     const secondParam: string | null = pathParams ? pathParams[1] : null;
-    console.log(username, secondParam);
     const serverURL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
     const { profile, isLoading, isError } = useProfile(token, username);
@@ -133,6 +133,16 @@ const ProfilePage: React.FC<ProfileProps> = (props) => {
                 }}>
                     <Grid item xs={12} sm={12} md={8} lg={9}>
                         <Box sx={{ marginTop: '15px' }}>
+                            { secondParam === 'followers' ?
+                            <Box sx={{ marginTop: '15px' }}>
+                                <Followers userId={user?.id} />
+                            </Box>
+                            :
+                            secondParam === 'followings' ?
+                            <Box sx={{ marginTop: '15px' }}>
+                                <Followings userId={user?.id} />
+                            </Box>
+                            :
                             <Box 
                                 sx={{
                                     display: 'flex',
@@ -145,6 +155,7 @@ const ProfilePage: React.FC<ProfileProps> = (props) => {
                                     <Typography variant="h6">{user?.description}</Typography>
                                 </Grid>
                             </Box>
+                            }
                         </Box>
                     </Grid>
                     <Grid item xs={12} sm={12} md={4} lg={3}>

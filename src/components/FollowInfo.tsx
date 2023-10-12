@@ -84,7 +84,7 @@ const FollowInfo: React.FC<FollowInfoProps> = (props) => {
                 }
             </ListItemButton>
           </Link>
-          <Link href={`/profile/${username}/following`} passHref style={{ textDecoration: 'none', color: 'inherit' }}>
+          <Link href={`/profile/${username}/followings`} passHref style={{ textDecoration: 'none', color: 'inherit' }}>
             <ListItemButton sx={{ minHeight: 48, justifyContent: 'initial', px: 2.5 }}>
                 <ListItemIcon sx={{ minWidth: 0, mr: 3, justifyContent: 'center' }}>
                     <ProfileIcon />
