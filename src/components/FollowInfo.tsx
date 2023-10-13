@@ -5,7 +5,8 @@ import { List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui
 import axios from 'axios';
 import useSWR from 'swr';
 import { useRouter } from 'next/router';
-import ProfileIcon from '@mui/icons-material/AccountCircle';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 
 
 const fetcher = (url: string) => axios.get(url).then(res => res.data);
@@ -70,7 +71,7 @@ const FollowInfo: React.FC<FollowInfoProps> = (props) => {
           <Link href={`/profile/${username}/followers`} passHref style={{ textDecoration: 'none', color: 'inherit' }}>
             <ListItemButton sx={{ minHeight: 48, justifyContent: 'initial', px: 2.5 }}>
                 <ListItemIcon sx={{ minWidth: 0, mr: 3, justifyContent: 'center' }}>
-                    <ProfileIcon />
+                    <FavoriteBorderIcon />
                 </ListItemIcon>
                 <ListItemText primary={'Followers'} sx={{ opacity: 1 }} />
                 {
@@ -87,7 +88,7 @@ const FollowInfo: React.FC<FollowInfoProps> = (props) => {
           <Link href={`/profile/${username}/followings`} passHref style={{ textDecoration: 'none', color: 'inherit' }}>
             <ListItemButton sx={{ minHeight: 48, justifyContent: 'initial', px: 2.5 }}>
                 <ListItemIcon sx={{ minWidth: 0, mr: 3, justifyContent: 'center' }}>
-                    <ProfileIcon />
+                    <FavoriteIcon />
                 </ListItemIcon>
                 <ListItemText primary={'Following'} sx={{ opacity: 1 }} />
                 {

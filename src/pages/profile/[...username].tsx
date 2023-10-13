@@ -118,7 +118,9 @@ const ProfilePage: React.FC<ProfileProps> = (props) => {
                         alignItems: 'center!important',
                         marginBottom: { xs: '15px', sm: '0px'}
                     }}>
-                        <ProfileRelation currentUser={currentUser} username={username} user={user} token={token} />
+                        { currentUser &&
+                            <ProfileRelation currentUser={currentUser} username={username} user={user} token={token} />
+                        }
                     </Box>
                 </Box>
             </Paper>
