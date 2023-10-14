@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, List, ListItem, ListItemButton, ListItemText, Paper, 
+import { Box, List, ListItem, ListItemButton, ListItemText, ListItemIcon, Paper, 
   Grid, Typography, Chip, Dialog, DialogTitle, DialogContent, FormControl, 
   Input, Pagination, Button } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -15,6 +15,10 @@ import AvatarUser from '../AvatarUser';
 import Link from 'next/link';
 import { getDuration } from '../../helpers';
 import { RootState } from '../../globalRedux/store';
+import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
+import HistoryIcon from '@mui/icons-material/History';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 
 
 const fetcherWithHeader = (url: string) => axios.get(url).then(res => res.data);
@@ -228,21 +232,33 @@ const VideosPage: React.FC = () => {
                           <List>
                               <ListItem disablePadding>
                                   <ListItemButton selected={sortParam === 'latest' || sortParam === null} onClick={() => handleVideosSortChange('latest')} >
+                                      <ListItemIcon sx={{ minWidth: 0, mr: 3, justifyContent: 'center' }}>
+                                        <AccessTimeFilledIcon />
+                                      </ListItemIcon>
                                       <ListItemText primary="Latest" />
                                   </ListItemButton>
                               </ListItem>
                               <ListItem disablePadding>
                                   <ListItemButton selected={sortParam === 'oldest'} onClick={() => handleVideosSortChange('oldest')} >
+                                      <ListItemIcon sx={{ minWidth: 0, mr: 3, justifyContent: 'center' }}>
+                                        <HistoryIcon />
+                                      </ListItemIcon>
                                       <ListItemText primary="Oldest" />
                                   </ListItemButton>
                               </ListItem>
                               <ListItem disablePadding>
                                   <ListItemButton selected={sortParam === 'views'} onClick={() => handleVideosSortChange('views')} >
+                                      <ListItemIcon sx={{ minWidth: 0, mr: 3, justifyContent: 'center' }}>
+                                        <VisibilityIcon />
+                                      </ListItemIcon>
                                       <ListItemText primary="Views" />
                                   </ListItemButton>
                               </ListItem>
                               <ListItem disablePadding>
                                   <ListItemButton selected={sortParam === 'likes'} onClick={() => handleVideosSortChange('likes')} >
+                                      <ListItemIcon sx={{ minWidth: 0, mr: 3, justifyContent: 'center' }}>
+                                        <FavoriteIcon />
+                                      </ListItemIcon>
                                       <ListItemText primary="Likes" />
                                   </ListItemButton>
                               </ListItem>

@@ -171,7 +171,11 @@ const ProfilePage: React.FC<ProfileProps> = (props) => {
                         }}>
                             <List>
                                 <ListItem disablePadding sx={{ display: 'block' }}>
-                                    <Link href={`/profile/${encodeURIComponent(username)}`} passHref style={{ textDecoration: 'none', color: 'inherit' }}>
+                                    <Link 
+                                        href={`/profile/${encodeURIComponent(username ? username : '')}`} 
+                                        passHref 
+                                        style={{ textDecoration: 'none', color: 'inherit' }}
+                                    >
                                         <ListItemButton sx={{ minHeight: 48, justifyContent: 'initial', px: 2.5 }}>
                                             <ListItemIcon sx={{ minWidth: 0, mr: 3, justifyContent: 'center' }}>
                                                 <ProfileIcon />
