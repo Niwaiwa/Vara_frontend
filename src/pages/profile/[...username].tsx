@@ -11,6 +11,7 @@ import ProfileRelation from '../../components/profile/ProfileRelation';
 import FollowInfo from '@/components/profile/FollowInfo';
 import Followers from '@/components/profile/Followers';
 import Followings from '@/components/profile/Followings';
+import VideosPage from '@/components/profile/VideosPage';
 import { RootState } from '@/globalRedux/store';
 import ProfileIcon from '@mui/icons-material/AccountCircle';
 import VideoIcon from '@mui/icons-material/VideoLibrary';
@@ -145,6 +146,11 @@ const ProfilePage: React.FC<ProfileProps> = (props) => {
                                 <Followings userId={user?.id} />
                             </Box>
                             :
+                            secondParam === 'videos' ?
+                            <Box sx={{ marginTop: '15px' }}>
+                                <VideosPage userId={user?.id} username={username} />
+                            </Box>
+                            :
                             <Box 
                                 sx={{
                                     display: 'flex',
@@ -183,12 +189,18 @@ const ProfilePage: React.FC<ProfileProps> = (props) => {
                                             <ListItemText primary={'Profile'} sx={{ opacity: 1 }} />
                                         </ListItemButton>
                                     </Link>
-                                    <ListItemButton sx={{ minHeight: 48, justifyContent: 'initial', px: 2.5 }}>
-                                        <ListItemIcon sx={{ minWidth: 0, mr: 3, justifyContent: 'center' }}>
-                                            <VideoIcon />
-                                        </ListItemIcon>
-                                        <ListItemText primary={'Video'} sx={{ opacity: 1 }} />
-                                    </ListItemButton>
+                                    <Link 
+                                        href={`/profile/${encodeURIComponent(username ? username : '')}/videos`}
+                                        passHref
+                                        style={{ textDecoration: 'none', color: 'inherit' }}
+                                    >
+                                        <ListItemButton sx={{ minHeight: 48, justifyContent: 'initial', px: 2.5 }}>
+                                            <ListItemIcon sx={{ minWidth: 0, mr: 3, justifyContent: 'center' }}>
+                                                <VideoIcon />
+                                            </ListItemIcon>
+                                            <ListItemText primary={'Video'} sx={{ opacity: 1 }} />
+                                        </ListItemButton>
+                                    </Link>
                                     <ListItemButton sx={{ minHeight: 48, justifyContent: 'initial', px: 2.5 }}>
                                         <ListItemIcon sx={{ minWidth: 0, mr: 3, justifyContent: 'center' }}>
                                             <PlayListIcon />
