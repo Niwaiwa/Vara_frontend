@@ -6,7 +6,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import axios from 'axios';
 import useSWR from 'swr';
 import { useRouter } from 'next/router';
-import AvatarUser from './AvatarUser';
+import AvatarUser from '../AvatarUser';
 
 
 const fetcher = (url: string) => axios.get(url).then(res => res.data);

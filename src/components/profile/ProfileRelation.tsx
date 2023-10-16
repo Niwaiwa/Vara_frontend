@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Box, Button } from '@mui/material';
 import { useDispatch } from 'react-redux';
-import { setMessageSnackBarState } from '../globalRedux/features/snackbar/messageSnackBarSlice';
+import { setMessageSnackBarState } from '../../globalRedux/features/snackbar/messageSnackBarSlice';
 import axios from 'axios';
 
 

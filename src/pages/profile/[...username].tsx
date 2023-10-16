@@ -7,10 +7,10 @@ import { Box, Container, Paper, Typography, List, ListItem, ListItemButton, List
     Grid, Button} from '@mui/material';
 import AvatarComponent from '../../components/AvatarComponent';
 import ContainerFluid from '../../components/ContainerFluid';
-import ProfileRelation from '../../components/ProfileRelation';
-import FollowInfo from '@/components/FollowInfo';
-import Followers from '@/components/Followers';
-import Followings from '@/components/Followings';
+import ProfileRelation from '../../components/profile/ProfileRelation';
+import FollowInfo from '@/components/profile/FollowInfo';
+import Followers from '@/components/profile/Followers';
+import Followings from '@/components/profile/Followings';
 import { RootState } from '@/globalRedux/store';
 import ProfileIcon from '@mui/icons-material/AccountCircle';
 import VideoIcon from '@mui/icons-material/VideoLibrary';
