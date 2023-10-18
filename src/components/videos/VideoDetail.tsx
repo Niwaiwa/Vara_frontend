@@ -52,11 +52,14 @@ const VideoDetail: React.FC<VideoDetailProps> = (props) => {
       <Box sx={{ display: 'flex' }}>
         <Grid container>
           <Grid item xs={12} sm={12} md={9} lg={9} sx={{ paddingRight: '15px', paddingLeft: '15px' }}>
-            { isError || !videoData ?
-              <Typography variant="body2">{`Error! Please try again.`}</Typography> 
-              :
-              isLoading ?
+            { isLoading ?
               <Typography variant="body2">{`Loading...`}</Typography>
+              :
+              isError || !videoData ?
+                isError.response.status === 404 ?
+                <Typography variant="body2">{`Video not found.`}</Typography>
+                :
+                <Typography variant="body2">{`Error! Please try again.`}</Typography> 
               :
               <Box>
                 <video width="100%" height="auto" controls>
