@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Head from 'next/head';
 import { AppProps } from 'next/app';
+import { appWithTranslation } from 'next-i18next';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { CacheProvider, EmotionCache } from '@emotion/react';
@@ -21,7 +22,7 @@ export interface MyAppProps extends AppProps {
   emotionCache?: EmotionCache;
 }
 
-export default function MyApp(props: MyAppProps) {
+const MyApp: React.FC<MyAppProps> = (props) => {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
   return (
     <ReduxProvider>
@@ -47,3 +48,5 @@ export default function MyApp(props: MyAppProps) {
     </ReduxProvider>
   );
 }
+
+export default appWithTranslation(MyApp);

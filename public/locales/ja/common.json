@@ -1,0 +1,19 @@
+{
+    "welcomeMessage": "Welcome to My App!",
+    "about": "About",
+    "contact": "Contact",
+    "en": "English",
+    "ja": "日本語",
+    "home": "ホーム",
+    "video": "動画",
+    "image": "画像",
+    "forum": "フォーラム",
+    "language": "言語",
+    "rating": "レーティング",
+    "theme": "テーマ",
+    "all": "すべて",
+    "G": "一般",
+    "E": "成人",
+    "dark": "Dark",
+    "light": "Light"
+}

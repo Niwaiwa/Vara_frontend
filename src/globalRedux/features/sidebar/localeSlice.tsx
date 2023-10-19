@@ -4,8 +4,8 @@ import { createSlice } from "@reduxjs/toolkit";
 
 
 const enum Locale {
-  EN = 'en-US',
-  JP = 'ja-JP',
+  EN = 'en',
+  JP = 'ja',
 }
 
 const initialState = {

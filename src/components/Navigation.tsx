@@ -31,6 +31,7 @@ import axios from 'axios';
 import Snackbar, { SnackbarOrigin } from '@mui/material/Snackbar';
 import { useRouter } from 'next/router';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTranslation } from 'next-i18next';
 
 
 const drawerWidth = 240;
@@ -101,6 +102,7 @@ interface CustomState extends SnackbarOrigin {
 }
 
 const Navigation = () => {
+  const { t } = useTranslation('common');
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const isMenuOpen = Boolean(anchorEl);
   const theme = useTheme();
@@ -164,36 +166,22 @@ const Navigation = () => {
     }
   };
 
+  const setLocaleParam = (locale: string) => {
+    dispatch(setLocale(locale));
+    const thisUrl = router.asPath;
+    router.push(thisUrl, thisUrl, { locale: locale });
+  };
+
   const getLocaleText = (text: string) => {
-    if (text === 'en-US') {
-      return 'English';
-    } else if (text === 'ja-JP') {
-      return 'Japanese';
-    } else {
-      return text;
-    }
+    return t(text);
   };
 
   const getRatingText = (text: string) => {
-    if (text === 'all') {
-      return 'All';
-    } else if (text === 'G') {
-      return 'General';
-    } else if (text === 'E') {
-      return 'Ecchi';
-    } else {
-      return text;
-    }
+    return t(text);
   };
 
   const getThemeModeText = (text: string) => {
-    if (text === 'dark') {
-      return 'Dark';
-    } else if (text === 'light') {
-      return 'Light';
-    } else {
-      return text;
-    }
+    return t(text);
   };
 
   const renderMenu = (
@@ -297,7 +285,7 @@ const Navigation = () => {
                     >
                       <HomeIcon />
                     </ListItemIcon>
-                    <ListItemText primary={'Home'} sx={{ opacity: open ? 1 : 0 }} />
+                    <ListItemText primary={t('home')} sx={{ opacity: open ? 1 : 0 }} />
                   </ListItemButton>
                 </Link>
               </ListItem>
@@ -322,7 +310,7 @@ const Navigation = () => {
                   >
                     <VideoLibraryIcon />
                   </ListItemIcon>
-                  <ListItemText primary={'Video'} sx={{ opacity: open ? 1 : 0 }} />
+                  <ListItemText primary={t('video')} sx={{ opacity: open ? 1 : 0 }} />
                 </ListItemButton>
               </Link>
             </ListItem>
@@ -343,7 +331,7 @@ const Navigation = () => {
                 >
                   <ImageIcon />
                 </ListItemIcon>
-                <ListItemText primary={'Image'} sx={{ opacity: open ? 1 : 0 }} />
+                <ListItemText primary={t('image')} sx={{ opacity: open ? 1 : 0 }} />
               </ListItemButton>
             </ListItem>
             <ListItem disablePadding sx={{ display: 'block' }}>
@@ -363,7 +351,7 @@ const Navigation = () => {
                 >
                   <ForumIcon />
                 </ListItemIcon>
-                <ListItemText primary={'Forum'} sx={{ opacity: open ? 1 : 0 }} />
+                <ListItemText primary={t('forum')} sx={{ opacity: open ? 1 : 0 }} />
               </ListItemButton>
             </ListItem>
           </List>
@@ -386,7 +374,7 @@ const Navigation = () => {
                 >
                   <LanguageIcon />
                 </ListItemIcon>
-                <ListItemText primary={'Language'} sx={{ opacity: open ? 1 : 0 }} />
+                <ListItemText primary={t('language')} sx={{ opacity: open ? 1 : 0 }} />
               </ListItem>
             </Box>
             {open ?
@@ -401,7 +389,7 @@ const Navigation = () => {
                       justifyContent: open ? 'initial' : 'center',
                       px: 2.5,
                     }}
-                    onClick={() => dispatch(setLocale(text))}
+                    onClick={() => setLocaleParam(text)}
                   >
                     <ListItemIcon
                       sx={{
@@ -488,7 +476,7 @@ const Navigation = () => {
                 >
                   <DarkModeIcon />
                 </ListItemIcon>
-                <ListItemText primary={'Theme'} sx={{ opacity: open ? 1 : 0 }} />
+                <ListItemText primary={t('theme')} sx={{ opacity: open ? 1 : 0 }} />
               </ListItem>
             </Box>
             {open ?

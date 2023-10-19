@@ -1,0 +1,19 @@
+{
+    "welcomeMessage": "Welcome to My App!",
+    "about": "About",
+    "contact": "Contact",
+    "en": "English",
+    "ja": "Japanese",
+    "home": "Home",
+    "video": "Video",
+    "image": "Image",
+    "forum": "Forum",
+    "language": "Language",
+    "rating": "Rating",
+    "theme": "Theme",
+    "all": "All",
+    "G": "General",
+    "E": "Ecchi",
+    "dark": "Dark",
+    "light": "Light"
+}
