@@ -1,8 +1,9 @@
 import React from 'react';
-import { GetStaticProps, GetStaticPaths } from 'next';
 import { useRouter } from 'next/router';
 import ContainerFluid from '../../components/ContainerFluid';
 import VideoDetail from '../../components/videos/VideoDetail';
+import { GetServerSideProps } from 'next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 
 interface VideoProps {
@@ -23,22 +24,10 @@ const Video: React.FC<VideoProps> = (props) => {
     );
 };
 
-// export const getStaticProps: GetStaticProps = async (context) => {
-//     const id = context.params?.id;
-//     return {
-//         props: {
-//             id,
-//         }
-//     }
-// }
-
-// export const getStaticPaths: GetStaticPaths = async () => {
-//     return {
-//         paths: [
-//             { params: { id: 'test' } },
-//         ],
-//         fallback: true,
-//     }
-// }
-
 export default Video;
+
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+    const locale = context.locale || 'en';
+    return { props: { ...(await serverSideTranslations(locale)) } };
+  };

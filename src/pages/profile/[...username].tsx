@@ -16,7 +16,8 @@ import { RootState } from '@/globalRedux/store';
 import ProfileIcon from '@mui/icons-material/AccountCircle';
 import VideoIcon from '@mui/icons-material/VideoLibrary';
 import PlayListIcon from '@mui/icons-material/PlaylistPlay';
-import { GetStaticProps, GetStaticPaths } from 'next';
+import { GetServerSideProps } from 'next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import useSWR from 'swr';
 
 
@@ -227,24 +228,10 @@ const ProfilePage: React.FC<ProfileProps> = (props) => {
     );
 };
 
-// export const getStaticProps: GetStaticProps = async (context) => {
-//     const username = context.params?.username;
-//     return {
-//         props: {
-//             username,
-//         }
-//     }
-// }
-
-// export const getStaticPaths: GetStaticPaths = async () => {
-//     return {
-//         paths: [
-//             { params: { username: 'test' } },
-//         ],
-//         fallback: true,
-//     }
-// }
-
-
 export default ProfilePage;
 
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+    const locale = context.locale || 'en';
+    return { props: { ...(await serverSideTranslations(locale)) } };
+  };
