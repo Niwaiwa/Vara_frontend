@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, TextField, Typography, Button } from '@mui/material';
+import { Box, TextField, Typography, Button, Divider } from '@mui/material';
 import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../globalRedux/store';
@@ -89,7 +89,7 @@ const ProfileSettings: React.FC = () => {
   return (
     <Box>
       <Typography variant="h6">Profile Settings</Typography>
-      <Box sx={{ marginTop: '15px', padding: '15px', backgroundColor: '#f5f5f5' }}>
+      <Box sx={{ marginTop: '15px', padding: '15px', backgroundColor: 'secondary.main' }}>
         <Box sx={{ display: 'flex', flexColumn: 'column', justifyContent: 'space-between' }}>
           <Typography variant="body2">Avatar</Typography>
         </Box>
@@ -106,7 +106,8 @@ const ProfileSettings: React.FC = () => {
           </form>
         </Box>
       </Box>
-      <Box sx={{ marginTop: '15px', padding: '15px', backgroundColor: '#f5f5f5' }}>
+      <Divider />
+      <Box sx={{ marginTop: '15px', padding: '15px', backgroundColor: 'secondary.main' }}>
         <Box sx={{ display: 'flex', flexColumn: 'column', justifyContent: 'space-between' }}>
           <Typography variant="body2">Header</Typography>
         </Box>
@@ -123,7 +124,8 @@ const ProfileSettings: React.FC = () => {
           </form>
         </Box>
       </Box>
-      <Box sx={{ marginTop: '15px', padding: '15px', backgroundColor: '#f5f5f5' }}>
+      <Divider />
+      <Box sx={{ marginTop: '15px', padding: '15px', backgroundColor: 'secondary.main' }}>
         <Box sx={{ display: 'flex', flexColumn: 'column', justifyContent: 'space-between' }}>
           <Typography variant="body2">Description</Typography>
         </Box>

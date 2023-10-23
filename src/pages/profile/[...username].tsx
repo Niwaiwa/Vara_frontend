@@ -80,7 +80,7 @@ const ProfilePage: React.FC<ProfileProps> = (props) => {
                 }}>
                 </Box>
                 <Box sx={{ 
-                    backgroundColor: '#f0f0f0', 
+                    backgroundColor: 'secondary.main',
                     display: 'flex',
                     flexDirection: { xs: 'column', sm: 'row' },
                     justifyContent: { xs: 'center', sm: 'space-between' },
@@ -135,7 +135,7 @@ const ProfilePage: React.FC<ProfileProps> = (props) => {
                         paddingLeft: '15px',
                         paddingRight: '15px',
                 }}>
-                    <Grid item xs={12} sm={12} md={8} lg={9}>
+                    <Grid item xs={12} sm={12} md={8} lg={9} sx={{ paddingRight: '15px', paddingLeft: '15px' }}>
                         <Box sx={{ marginTop: '15px' }}>
                             { secondParam === 'followers' ?
                             <Box sx={{ marginTop: '15px' }}>
@@ -174,7 +174,7 @@ const ProfilePage: React.FC<ProfileProps> = (props) => {
                             borderRadius: '5px',
                             overflow: 'hidden',
                             boxShadow: '0 2px 5px rgba(0,0,0,.1)',
-                            backgroundColor: '#f0f0f0',
+                            backgroundColor: 'secondary.main',
                         }}>
                             <List>
                                 <ListItem disablePadding sx={{ display: 'block' }}>
@@ -217,7 +217,7 @@ const ProfilePage: React.FC<ProfileProps> = (props) => {
                             borderRadius: '5px',
                             overflow: 'hidden',
                             boxShadow: '0 2px 5px rgba(0,0,0,.1)',
-                            backgroundColor: '#f0f0f0',
+                            backgroundColor: 'secondary.main',
                         }}>
                             <FollowInfo userId={user?.id} username={username} />
                         </Box>

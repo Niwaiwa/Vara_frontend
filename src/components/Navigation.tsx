@@ -101,7 +101,7 @@ interface CustomState extends SnackbarOrigin {
   message?: string;
 }
 
-const Navigation = () => {
+const Navigation: React.FC = () => {
   const { t } = useTranslation('common');
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const isMenuOpen = Boolean(anchorEl);
@@ -182,6 +182,10 @@ const Navigation = () => {
 
   const getThemeModeText = (text: string) => {
     return t(text);
+  };
+
+  const switchThemeMode = (mode: 'light' | 'dark') => {
+    dispatch(setThemeMode(mode));
   };
 
   const renderMenu = (
@@ -491,7 +495,7 @@ const Navigation = () => {
                       justifyContent: open ? 'initial' : 'center',
                       px: 2.5,
                     }}
-                    onClick={() => dispatch(setThemeMode(text))}
+                    onClick={() => switchThemeMode(text)}
                   >
                     <ListItemIcon
                       sx={{

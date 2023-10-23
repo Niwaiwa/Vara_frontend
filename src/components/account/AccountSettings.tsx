@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { TextField, Typography, Box, Button } from '@mui/material';
+import { TextField, Typography, Box, Button, Divider } from '@mui/material';
 import axios from 'axios';
 import { RootState } from '../../globalRedux/store';
 import { setUserInfo } from '../../globalRedux/features/auth/authSlice';
@@ -58,7 +58,7 @@ const AccountSettings: React.FC = () => {
   return (
     <Box>
       <Typography variant="h6">Account Settings</Typography>
-      <Box sx={{ marginTop: '15px', padding: '15px', backgroundColor: '#f5f5f5' }}>
+      <Box sx={{ marginTop: '15px', padding: '15px', backgroundColor: 'secondary.main' }}>
         <Box sx={{ display: 'flex', flexColumn: 'column', justifyContent: 'space-between' }}>
           <Typography variant="body2">Nickname</Typography>
         </Box>
@@ -83,7 +83,8 @@ const AccountSettings: React.FC = () => {
           </form>
         </Box>
       </Box>
-      <Box sx={{ marginTop: '15px', padding: '15px', backgroundColor: '#f5f5f5' }}>
+      <Divider />
+      <Box sx={{ marginTop: '15px', padding: '15px', backgroundColor: 'secondary.main' }}>
         <Box sx={{ display: 'flex', flexColumn: 'column', justifyContent: 'space-between' }}>
           <Typography variant="body2">Password</Typography>
         </Box>

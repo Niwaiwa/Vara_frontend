@@ -70,7 +70,7 @@ const Followers: React.FC<FollowersProps> = (props) => {
                 sx={{
                   marginRight: '-15px',
                   marginLeft: '-15px',
-                  backgroundColor: '#f5f5f5',
+                  backgroundColor: 'secondary.main',
                 }}
               >
                 {followers?.map((data: any) => (

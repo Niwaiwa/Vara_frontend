@@ -16,7 +16,7 @@ const theme = createTheme({
       main: '#556cd6',
     },
     secondary: {
-      main: '#19857b',
+      main: '#f5f5f5',
     },
     error: {
       main: red.A400,
@@ -30,4 +30,23 @@ const theme = createTheme({
   },
 });
 
+const darkTheme = createTheme({
+  palette: {
+    mode: 'dark',
+    primary: {
+      main: '#556cd6',
+    },
+    secondary: {
+      main: '#121212',
+    },
+    background: {
+      default: '#000000',
+    },
+  },
+  typography: {
+    fontFamily: roboto.style.fontFamily,
+  },
+});
+
 export default theme;
+export { darkTheme };

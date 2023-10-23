@@ -13,30 +13,36 @@ import Section from "../components/Section";
 import ReduxProvider from "../globalRedux/provider";
 import ReduxPersistGate from '@/globalRedux/persistGate';
 import MessageSnackBar from '@/components/MessageSnackBar';
-import Main from '@/components/Main';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/globalRedux/store';
 
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
 
-export interface MyAppProps extends AppProps {
+export interface MainProps extends AppProps {
   emotionCache?: EmotionCache;
 }
 
-const MyApp: React.FC<MyAppProps> = (props) => {
+const Main: React.FC<MainProps> = (props) => {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
+  const themeMode = useSelector((state: RootState) => state.themeMode.themeMode);
   return (
-    <ReduxProvider>
-      <ReduxPersistGate>
-        <CacheProvider value={emotionCache}>
-          <Head>
-            <meta name="viewport" content="initial-scale=1, width=device-width" />
-          </Head>
-          <Main {...props} />
-        </CacheProvider>
-      </ReduxPersistGate>
-    </ReduxProvider>
+    <ThemeProvider theme={themeMode === 'light' ? theme : darkTheme}>
+    {/* <ThemeProvider theme={theme}> */}
+      {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+      <CssBaseline />
+      {/* <Navigation changeThemeMode={setThemeMode} /> */}
+      <Navigation />
+      <Section>
+        <Component {...pageProps} />  
+      </Section>
+      <Section>
+        <Footer />
+      </Section>
+      <MessageSnackBar />
+    </ThemeProvider>
   );
 }
 
-export default appWithTranslation(MyApp);
+export default Main;

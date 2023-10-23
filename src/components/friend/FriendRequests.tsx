@@ -65,7 +65,7 @@ const FriendRequests: React.FC = () => {
             sx={{
               marginRight: '-15px',
               marginLeft: '-15px',
-              backgroundColor: '#f5f5f5',
+              backgroundColor: 'secondary.main',
             }}
           >
             {friendRequests?.map((friendRequest: any) => (
